@@ -1,6 +1,9 @@
+const LANG_NAMES = { en: "English", fr: "French", de: "German", es: "Spanish", pt: "Portuguese", ru: "Russian", it: "Italian", ja: "Japanese", ko: "Korean", zh: "Chinese" };
+
 const DEFAULTS = {
   rootDir: "OroroTV",
   subtitleLangs: ["en"],
+  defaultSubLang: "en",
 };
 
 async function load() {
@@ -12,7 +15,28 @@ async function load() {
   const checked = config.subtitleLangs || [];
   document.querySelectorAll("#subLangs input[type='checkbox']").forEach((cb) => {
     cb.checked = checked.includes(cb.value);
+    cb.onchange = updateDefaultLangSelect;
   });
+  updateDefaultLangSelect(config.defaultSubLang);
+}
+
+function updateDefaultLangSelect(selected) {
+  const sel = document.getElementById("defaultSubLang");
+  const checked = Array.from(
+    document.querySelectorAll("#subLangs input[type='checkbox']:checked")
+  ).map((cb) => cb.value);
+  sel.replaceChildren();
+  for (const val of checked) {
+    const opt = document.createElement("option");
+    opt.value = val;
+    opt.textContent = LANG_NAMES[val] || val;
+    sel.appendChild(opt);
+  }
+  if (selected && checked.includes(selected)) {
+    sel.value = selected;
+  } else if (sel.options.length > 0) {
+    sel.selectedIndex = 0;
+  }
 }
 
 async function save() {
@@ -20,8 +44,9 @@ async function save() {
   const subtitleLangs = Array.from(
     document.querySelectorAll("#subLangs input[type='checkbox']:checked")
   ).map((cb) => cb.value);
+  const defaultSubLang = document.getElementById("defaultSubLang").value || subtitleLangs[0] || "";
 
-  await chrome.storage.sync.set({ rootDir, subtitleLangs });
+  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang });
 
   const status = document.getElementById("status");
   status.textContent = "Saved.";
