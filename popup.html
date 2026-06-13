@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ororo Downloader</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #13132b;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+      width: 360px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #2a2a4e;
+      background: #0f0f1e;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .tabs button {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      color: #666;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tabs button:hover { color: #aaa; }
+    .tabs button.active { color: #fff; border-bottom-color: #6c5ce7; }
+    .tab-content { padding: 10px 12px; display: none; }
+    .tab-content.active { display: block; }
+    h1 { font-size: 15px; margin: 0 0 10px; color: #fff; display: none; }
+    .empty { color: #666; font-size: 12px; text-align: center; padding: 20px 0; }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      background: #1a1a3e;
+    }
+    .item .info { flex: 1; min-width: 0; }
+    .item .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item .meta { font-size: 11px; color: #666; }
+    .item .stars { color: #ffd700; font-size: 14px; flex-shrink: 0; }
+    .item .type-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 600;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .type-show { background: #6c5ce7; color: #fff; }
+    .type-movie { background: #00b894; color: #fff; }
+    .status-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .status-queued { background: #2d2d4e; color: #aaa; }
+    .status-downloading { background: #6c5ce7; color: #fff; }
+    .status-completed { background: #00b894; color: #fff; }
+    .status-failed { background: #d63031; color: #fff; }
+    .status-cancelled { background: #333; color: #666; }
+    .actions { margin-top: 10px; display: flex; gap: 6px; }
+    .actions button {
+      flex: 1;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .actions button:hover { opacity: 0.85; }
+    .btn-cancel { background: #d63031; color: #fff; }
+    .btn-open { background: #2d2d4e; color: #ccc; }
+    .btn-primary { background: #6c5ce7; color: #fff; }
+    .summary { font-size: 11px; color: #666; margin-bottom: 8px; }
+    .perm-prompt { text-align: center; padding: 16px 8px; }
+    .perm-prompt p { color: #999; font-size: 12px; line-height: 1.5; margin: 8px 0 16px; }
+    .watched-item .del-btn {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 4px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .watched-item .del-btn:hover { color: #ff6b6b; }
+    .watched-date { font-size: 10px; color: #555; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <div class="tabs" id="tabs">
+    <button class="active" data-tab="queue">Queue</button>
+    <button data-tab="watched">Watched</button>
+  </div>
+
+  <div id="permission-loading" class="perm-prompt">
+    <p>Checking permissions...</p>
+  </div>
+  <div id="permission-required" class="perm-prompt" style="display:none">
+    <p>This extension needs access to <strong>ororo.tv</strong> to load show data and download episodes.</p>
+    <button class="btn-primary" id="grant-permission">Grant Access</button>
+  </div>
+
+  <div id="tab-queue" class="tab-content">
+    <div id="summary" class="summary"></div>
+    <div id="list"></div>
+    <div class="actions">
+      <button class="btn-cancel" id="cancel-all" style="display:none">Cancel Queued</button>
+      <button class="btn-open" id="open-options">Settings</button>
+    </div>
+  </div>
+
+  <div id="tab-watched" class="tab-content">
+    <div id="watched-list"></div>
+  </div>
+
+  <script src="src/popup.js"></script>
+</body>
+</html>

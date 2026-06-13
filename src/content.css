@@ -1,0 +1,272 @@
+#ororo-dl-panel {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  z-index: 999999;
+  width: 320px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+}
+
+#ororo-dl-panel * {
+  box-sizing: border-box;
+}
+
+#ororo-dl-panel h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+#ororo-dl-panel .subtitle {
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 12px;
+}
+
+#ororo-dl-panel .season-group {
+  margin-bottom: 6px;
+}
+
+#ororo-dl-panel .season-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#ororo-dl-panel .season-group label:hover {
+  background: #2a2a4e;
+}
+
+#ororo-dl-panel .season-group input[type="checkbox"] {
+  accent-color: #6c5ce7;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+#ororo-dl-panel .season-count {
+  font-size: 11px;
+  color: #666;
+  margin-left: auto;
+}
+
+#ororo-dl-panel .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#ororo-dl-panel button {
+  flex: 1;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+#ororo-dl-panel button:hover {
+  opacity: 0.85;
+}
+
+#ororo-dl-panel .btn-download {
+  background: #6c5ce7;
+  color: #fff;
+}
+
+#ororo-dl-panel .btn-download:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#ororo-dl-panel .btn-select-all {
+  background: #2d2d4e;
+  color: #ccc;
+}
+
+#ororo-dl-panel .btn-deselect-all {
+  background: #2d2d4e;
+  color: #ccc;
+}
+
+#ororo-dl-panel .status-bar {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #0f0f1e;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #aaa;
+  display: none;
+}
+
+#ororo-dl-panel .status-bar.visible {
+  display: block;
+}
+
+#ororo-dl-panel .error-msg {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 8px;
+  display: none;
+}
+
+#ororo-dl-panel .error-msg.visible {
+  display: block;
+}
+
+#ororo-dl-panel .close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+#ororo-dl-panel .close-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+#ororo-dl-panel .dl-info {
+  margin-top: 14px;
+  padding: 10px 8px;
+  background: #0f0f1e;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #777;
+  line-height: 1.6;
+}
+
+#ororo-dl-panel .dl-info-row {
+  display: flex;
+  gap: 6px;
+}
+
+#ororo-dl-panel .dl-info-row + .dl-info-row {
+  margin-top: 4px;
+}
+
+#ororo-dl-panel .dl-info-label {
+  flex-shrink: 0;
+}
+
+#ororo-dl-panel .dl-info-text {
+  color: #999;
+}
+
+#ororo-dl-panel .dl-info-text a {
+  color: #8c7ae6;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#ororo-dl-panel .dl-info-text a:hover {
+  color: #a29bfe;
+}
+
+#ororo-dl-panel .watched-section {
+  margin-top: 12px;
+  padding: 10px 8px;
+  background: #0f0f1e;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#ororo-dl-panel .watched-checkbox {
+  accent-color: #6c5ce7;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+#ororo-dl-panel .watched-label {
+  font-size: 13px;
+  color: #ccc;
+  cursor: pointer;
+  user-select: none;
+}
+
+#ororo-dl-panel .star-rating {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+#ororo-dl-panel .star-rating .star {
+  font-size: 18px;
+  cursor: pointer;
+  color: #444;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+#ororo-dl-panel .star-rating .star.filled {
+  color: #ffd700;
+}
+
+#ororo-dl-panel .star-rating .star:hover,
+#ororo-dl-panel .star-rating .star.hover {
+  color: #ffed4a;
+}
+
+#ororo-dl-panel .btn-watched-save {
+  background: #2d2d4e;
+  color: #ccc;
+  font-size: 11px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#ororo-dl-panel .btn-watched-save:hover {
+  background: #3d3d6e;
+}
+
+#ororo-dl-panel .btn-watched-save.saved {
+  background: #00b894;
+  color: #fff;
+}
+
+#ororo-dl-panel .btn-watched-remove {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+#ororo-dl-panel .btn-watched-remove:hover {
+  color: #ff6b6b;
+}
