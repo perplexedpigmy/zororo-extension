@@ -270,3 +270,12 @@
 #ororo-dl-panel .btn-watched-remove:hover {
   color: #ff6b6b;
 }
+
+.ororo-watched-panel.editing .movie-btn.remove {
+  display: inline-block !important;
+}
+
+.ororo-watched-panel .favorites-list {
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+}

@@ -79,6 +79,36 @@
     panel.style.display = "none";
     content.appendChild(panel);
 
+    const list = document.createElement("div");
+    list.className = "favorites-list js-fav-list-scroll";
+    panel.appendChild(list);
+
+    const psScript = document.createElement("script");
+    psScript.textContent =
+      "try{new PerfectScrollbar(document.querySelector('.ororo-watched-panel .favorites-list'))}catch(e){}";
+    document.body.appendChild(psScript);
+    setTimeout(() => psScript.remove(), 100);
+
+    const foot = document.createElement("div");
+    foot.className = "favorites-foot";
+    const removeArea = document.createElement("div");
+    removeArea.className = "favorites-remove";
+    const markArea = document.createElement("div");
+    markArea.className = "favorites-mark";
+    const editLink = document.createElement("a");
+    editLink.className = "js-fav-edit";
+    editLink.href = "#";
+    editLink.textContent = "Edit";
+    editLink.onclick = (e) => {
+      e.preventDefault();
+      panel.classList.toggle("editing");
+      editLink.textContent = panel.classList.contains("editing") ? "Done" : "Edit";
+    };
+    markArea.appendChild(editLink);
+    foot.appendChild(removeArea);
+    foot.appendChild(markArea);
+    panel.appendChild(foot);
+
     function deactivateWatched() {
       li.classList.remove("active");
       panel.style.display = "none";
@@ -99,7 +129,8 @@
 
   async function renderWatchedDropdown(panel) {
     const watched = await loadWatched();
-    panel.replaceChildren();
+    const list = panel.querySelector(".favorites-list");
+    list.replaceChildren();
 
     if (watched.length === 0) {
       const note = document.createElement("div");
@@ -108,7 +139,7 @@
       p.className = "favorites-note-text";
       p.textContent = "No watched items yet. Mark a show or movie as watched to see it here.";
       note.appendChild(p);
-      panel.appendChild(note);
+      list.appendChild(note);
       return;
     }
 
@@ -156,7 +187,7 @@
       info.appendChild(desc);
       div.appendChild(info);
 
-      // Type badge
+      // Type badge + Remove button
       const other = document.createElement("div");
       other.className = "movie-other";
       const badge = document.createElement("span");
@@ -164,9 +195,20 @@
         "; font-size:10px; font-weight:600; text-transform:uppercase;";
       badge.textContent = item.type === "movie" ? "MOVIE" : "SHOW";
       other.appendChild(badge);
-      div.appendChild(other);
 
-      panel.appendChild(div);
+      const delBtn = document.createElement("a");
+      delBtn.className = "movie-btn remove";
+      delBtn.href = "#";
+      delBtn.textContent = "Remove";
+      delBtn.style.display = "none";
+      delBtn.onclick = (e) => {
+        e.preventDefault();
+        removeWatchedItem(item.id).then(() => renderWatchedDropdown(panel));
+      };
+      other.appendChild(delBtn);
+
+      div.appendChild(other);
+      list.appendChild(div);
     }
   }
 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ororo TV Downloader",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Download shows from ororo.tv — all seasons or a specific season with subtitles.",
   "browser_specific_settings": {
     "gecko": {
