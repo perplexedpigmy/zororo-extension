@@ -75,6 +75,16 @@
   <button id="save">Save</button>
   <div id="status"></div>
 
+  <hr style="border:1px solid #1a1a3e; margin:24px 0;" />
+  <h2 style="font-size:15px; margin:0 0 16px; color:#fff;">Watched List</h2>
+  <div class="field">
+    <button id="export-btn" style="margin-right:8px;">Export</button>
+    <button id="import-btn">Import</button>
+    <input type="file" id="import-file" accept=".json" hidden />
+    <div class="hint">Export or import your watched shows, movies, and ratings as JSON.</div>
+  </div>
+  <div id="io-status" style="font-size:12px; margin-top:6px;"></div>
+
   <script src="src/options.js"></script>
 </body>
 </html>
