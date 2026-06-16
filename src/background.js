@@ -55,7 +55,7 @@ async function processItem(item) {
   try {
     const config = await getConfig();
     const base = `${config.rootDir}/${safePath(item.showName)}/s${String(item.season).padStart(2, "0")}`;
-    const epFile = `${base}/${item.episodeNum}.${safePath(item.episodeName || "Episode")}`;
+    const epFile = `${base}/${String(item.episodeNum).padStart(2, "0")}.${safePath(item.episodeName || "Episode")}`;
 
     await chrome.downloads.download({
       url: item.downloadUrl,

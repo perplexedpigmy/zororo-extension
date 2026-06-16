@@ -428,12 +428,22 @@
         s.className = "star" + (i <= rating ? " filled" : "");
         s.textContent = "\u2605";
         s.dataset.value = String(i);
+        s.onmouseenter = () => {
+          for (const child of stars.children) {
+            child.classList.toggle("hover", Number(child.dataset.value) <= i);
+          }
+        };
         s.onclick = () => {
           currentRating = currentRating === i ? 0 : i;
           renderStars(currentRating);
         };
         stars.appendChild(s);
       }
+      stars.onmouseleave = () => {
+        for (const child of stars.children) {
+          child.classList.remove("hover");
+        }
+      };
     }
     renderStars(currentRating);
 
