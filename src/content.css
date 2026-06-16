@@ -276,6 +276,6 @@
 }
 
 .ororo-watched-panel .favorites-list {
-  max-height: calc(100vh - 160px);
+  max-height: calc(100vh - 256px);
   overflow-y: auto;
 }

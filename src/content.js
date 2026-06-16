@@ -80,14 +80,8 @@
     content.appendChild(panel);
 
     const list = document.createElement("div");
-    list.className = "favorites-list js-fav-list-scroll";
+    list.className = "favorites-list";
     panel.appendChild(list);
-
-    const psScript = document.createElement("script");
-    psScript.textContent =
-      "try{new PerfectScrollbar(document.querySelector('.ororo-watched-panel .favorites-list'))}catch(e){}";
-    document.body.appendChild(psScript);
-    setTimeout(() => psScript.remove(), 100);
 
     const foot = document.createElement("div");
     foot.className = "favorites-foot";
