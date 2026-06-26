@@ -98,6 +98,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           bySeason[ep.season].push(ep);
         }
 
+        const all = await chrome.downloads.search({});
+        console.log("[Ororo DL] Total downloads in history:", all.length);
+        const matching = all.filter(r => r.filename && r.filename.includes(config.rootDir));
+        console.log("[Ororo DL] Matching rootDir:", matching.length);
+        for (const r of matching.slice(0, 5)) {
+          console.log("[Ororo DL]   sample:", r.state, r.exists, r.filename);
+        }
         const onDisk = new Set();
         for (const seasonStr of Object.keys(bySeason)) {
           const prefix = `${config.rootDir}/${safePath(msg.showName)}/s${String(parseInt(seasonStr, 10)).padStart(2, "0")}/`;
