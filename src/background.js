@@ -101,14 +101,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const onDisk = new Set();
         for (const seasonStr of Object.keys(bySeason)) {
           const prefix = `${config.rootDir}/${safePath(msg.showName)}/s${String(parseInt(seasonStr, 10)).padStart(2, "0")}/`;
+          console.log("[Ororo DL] Searching prefix:", prefix);
           const results = await chrome.downloads.search({ filename: prefix });
+          console.log("[Ororo DL] Search results count:", results.length);
           for (const r of results) {
+            console.log("[Ororo DL]   result:", r.state, r.exists, r.filename);
             if (r.state === "complete" && r.exists !== false) {
               const m = r.filename.match(/\/(\d+)\./);
-              if (m) onDisk.add(parseInt(m[1], 10));
+              if (m) {
+                console.log("[Ororo DL]   matched ep num:", m[1]);
+                onDisk.add(parseInt(m[1], 10));
+              } else {
+                console.log("[Ororo DL]   no regex match");
+              }
+            } else {
+              console.log("[Ororo DL]   skipped (state=" + r.state + " exists=" + r.exists + ")");
             }
           }
         }
+        console.log("[Ororo DL] onDisk set:", [...onDisk]);
+        console.log("[Ororo DL] episode numbers:", msg.episodes.map(e => e.number));
 
         let queuedCount = 0;
         let skippedCount = 0;
@@ -136,6 +148,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             queuedCount++;
           }
         }
+        console.log("[Ororo DL] queued:", queuedCount, "skipped:", skippedCount);
 
         if (queuedCount > 0) {
           await saveQueue();
