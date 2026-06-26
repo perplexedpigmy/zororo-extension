@@ -547,7 +547,7 @@
       span.textContent = "Season " + s;
       const count = document.createElement("span");
       count.className = "season-count";
-      count.textContent = available + " of " + total + " ep.";
+      count.textContent = incomplete ? available + " of " + total + " ep." : total + " ep.";
       const label = document.createElement("label");
       label.appendChild(cb);
       label.appendChild(span);
