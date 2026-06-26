@@ -529,14 +529,14 @@
     seasonsEl.replaceChildren();
     for (const s of seasons) {
       const eps = episodes.filter((e) => e.season === s);
-      const total = eps.length;
-      const available = eps.filter((e) => {
-        if (e.available === false) return false;
-        if (e.download_url == null) return false;
-        return true;
-      }).length;
-      const missing = total - available;
-      const incomplete = missing > 0;
+      const tab = document.getElementById(String(s));
+      let released = eps.length;
+      let upcoming = 0;
+      if (tab) {
+        upcoming = tab.querySelectorAll(".show-content__upcoming-episode").length;
+      }
+      const total = released + upcoming;
+      const incomplete = upcoming > 0;
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
@@ -547,7 +547,7 @@
       span.textContent = "Season " + s;
       const count = document.createElement("span");
       count.className = "season-count";
-      count.textContent = incomplete ? available + " of " + total + " ep." : total + " ep.";
+      count.textContent = incomplete ? released + " of " + total + " ep." : total + " ep.";
       const label = document.createElement("label");
       label.appendChild(cb);
       label.appendChild(span);
@@ -555,7 +555,7 @@
       if (incomplete) {
         const badge = document.createElement("span");
         badge.className = "season-missing";
-        badge.textContent = missing + " missing";
+        badge.textContent = upcoming + " missing";
         label.appendChild(badge);
       }
       const div = document.createElement("div");
