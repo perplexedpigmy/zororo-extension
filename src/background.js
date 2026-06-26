@@ -103,7 +103,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         for (const seasonStr of Object.keys(bySeason)) {
           const prefix = `${config.rootDir}/${safePath(msg.showName)}/s${String(parseInt(seasonStr, 10)).padStart(2, "0")}/`;
           for (const r of all) {
-            if (r.state === "complete" && r.exists !== false && r.filename && r.filename.includes(prefix)) {
+            if (r.state === "complete" && r.filename && r.filename.includes(prefix)) {
               const m = r.filename.match(/\/(\d+)\./);
               if (m) onDisk.add(parseInt(m[1], 10));
             }
