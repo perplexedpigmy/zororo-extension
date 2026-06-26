@@ -60,6 +60,25 @@
   margin: 0;
 }
 
+#ororo-dl-panel .season-group.incomplete {
+  opacity: 0.55;
+}
+
+#ororo-dl-panel .season-group.incomplete .season-count {
+  color: #e74c3c;
+}
+
+#ororo-dl-panel .season-missing {
+  font-size: 10px;
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.15);
+  padding: 1px 6px;
+  border-radius: 8px;
+  margin-left: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 #ororo-dl-panel .season-count {
   font-size: 11px;
   color: #666;

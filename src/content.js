@@ -529,22 +529,37 @@
     seasonsEl.replaceChildren();
     for (const s of seasons) {
       const eps = episodes.filter((e) => e.season === s);
+      const total = eps.length;
+      const available = eps.filter((e) => {
+        if (e.available === false) return false;
+        if (e.download_url == null) return false;
+        return true;
+      }).length;
+      const missing = total - available;
+      const incomplete = missing > 0;
+
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.className = "ororo-dl-season-cb";
       cb.dataset.season = String(s);
-      cb.checked = true;
+      cb.checked = !incomplete;
       const span = document.createElement("span");
       span.textContent = "Season " + s;
       const count = document.createElement("span");
       count.className = "season-count";
-      count.textContent = eps.length + " ep.";
+      count.textContent = available + " of " + total + " ep.";
       const label = document.createElement("label");
       label.appendChild(cb);
       label.appendChild(span);
       label.appendChild(count);
+      if (incomplete) {
+        const badge = document.createElement("span");
+        badge.className = "season-missing";
+        badge.textContent = missing + " missing";
+        label.appendChild(badge);
+      }
       const div = document.createElement("div");
-      div.className = "season-group";
+      div.className = "season-group" + (incomplete ? " incomplete" : "");
       div.appendChild(label);
       seasonsEl.appendChild(div);
     }
@@ -593,16 +608,21 @@
         return;
       }
 
-      goBtn.textContent = "Queuing...";
+      goBtn.textContent = "Checking for existing downloads...";
 
       chrome.runtime.sendMessage(
         { type: "start-download", showName: showName, episodes: resolved },
-        () => {
+        (resp) => {
           if (chrome.runtime.lastError) {
             errorEl.textContent = "Extension error. Check console or reload.";
             errorEl.classList.add("visible");
+          } else if (resp.queued === 0) {
+            statusBar.textContent = "All episodes already downloaded.";
+            statusBar.classList.add("visible");
           } else {
-            statusBar.textContent = "Queued " + resolved.length + " episode(s).";
+            const parts = ["Queued " + resp.queued + " episode(s)."];
+            if (resp.skipped > 0) parts.push("Skipped " + resp.skipped + " (already on disk).");
+            statusBar.textContent = parts.join(" ");
             statusBar.classList.add("visible");
           }
           goBtn.disabled = false;

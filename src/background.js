@@ -90,28 +90,61 @@ async function processItem(item) {
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   switch (msg.type) {
     case "start-download":
-      for (const ep of msg.episodes) {
-        const exists = queue.some(
-          (q) =>
-            q.showName === msg.showName &&
-            q.downloadUrl === ep.downloadUrl &&
-            (q.status === "queued" || q.status === "downloading")
-        );
-        if (!exists) {
-          queue.push({
-            showName: msg.showName,
-            season: ep.season,
-            episodeNum: ep.number,
-            episodeName: ep.name || `Episode ${ep.number}`,
-            downloadUrl: ep.downloadUrl,
-            subtitles: ep.subtitles || [],
-            status: "queued",
-          });
+      (async () => {
+        const config = await getConfig();
+        const bySeason = {};
+        for (const ep of msg.episodes) {
+          if (!bySeason[ep.season]) bySeason[ep.season] = [];
+          bySeason[ep.season].push(ep);
         }
-      }
-      saveQueue().then(() => { broadcast(); processNext(); });
-      sendResponse({ ok: true });
-      break;
+
+        const onDisk = new Set();
+        for (const seasonStr of Object.keys(bySeason)) {
+          const prefix = `${config.rootDir}/${safePath(msg.showName)}/s${String(parseInt(seasonStr, 10)).padStart(2, "0")}/`;
+          const results = await chrome.downloads.search({ filename: prefix });
+          for (const r of results) {
+            if (r.state === "complete" && r.exists !== false) {
+              const m = r.filename.match(/\/(\d+)\./);
+              if (m) onDisk.add(parseInt(m[1], 10));
+            }
+          }
+        }
+
+        let queuedCount = 0;
+        let skippedCount = 0;
+        for (const ep of msg.episodes) {
+          if (onDisk.has(ep.number)) {
+            skippedCount++;
+            continue;
+          }
+          const exists = queue.some(
+            (q) =>
+              q.showName === msg.showName &&
+              q.downloadUrl === ep.downloadUrl &&
+              (q.status === "queued" || q.status === "downloading")
+          );
+          if (!exists) {
+            queue.push({
+              showName: msg.showName,
+              season: ep.season,
+              episodeNum: ep.number,
+              episodeName: ep.name || `Episode ${ep.number}`,
+              downloadUrl: ep.downloadUrl,
+              subtitles: ep.subtitles || [],
+              status: "queued",
+            });
+            queuedCount++;
+          }
+        }
+
+        if (queuedCount > 0) {
+          await saveQueue();
+          broadcast();
+          processNext();
+        }
+        sendResponse({ ok: true, queued: queuedCount, skipped: skippedCount });
+      })();
+      return true;
 
     case "get-queue":
       loadQueue().then(() => sendResponse({ queue }));
