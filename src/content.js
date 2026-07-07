@@ -238,6 +238,114 @@
     return null;
   }
 
+  const COINS = [
+    { id: "btc", name: "BTC", symbol: "₿", color: "#f7931a", address: "bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5" },
+    { id: "eth", name: "ETH", symbol: "Ξ", color: "#627eea", address: "0x581b4810873698505FDF3aAf0a39430bb0D7d655" },
+    { id: "sol", name: "SOL", symbol: "◎", color: "#9945ff", address: "6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E" },
+  ];
+
+  function buildDonateModal() {
+    const modal = document.getElementById("ororo-dl-donate-modal");
+    modal.replaceChildren();
+
+    const backBtn = document.createElement("button");
+    backBtn.className = "donate-back";
+    backBtn.textContent = "← " + t("back");
+    backBtn.onclick = () => { modal.closest("#ororo-dl-panel").classList.remove("donate-open"); };
+    modal.appendChild(backBtn);
+
+    const h = document.createElement("h3");
+    h.className = "donate-heading";
+    h.textContent = "❤️ " + t("support") + " Zororo";
+    modal.appendChild(h);
+
+    const coffee = document.createElement("div");
+    coffee.className = "donate-section";
+    const ct = document.createElement("h4");
+    ct.className = "donate-section-title";
+    ct.textContent = "☕ Buy me a coffee";
+    coffee.appendChild(ct);
+    const cl = document.createElement("a");
+    cl.href = "https://www.buymeacoffee.com/pipolarbear";
+    cl.target = "_blank";
+    cl.className = "coffee-btn";
+    cl.textContent = "☕ Buy me a coffee";
+    coffee.appendChild(cl);
+    modal.appendChild(coffee);
+
+    const crypto = document.createElement("div");
+    crypto.className = "donate-section";
+    const crt = document.createElement("h4");
+    crt.className = "donate-section-title";
+    crt.textContent = "Cryptocurrency";
+    crypto.appendChild(crt);
+
+    const grid = document.createElement("div");
+    grid.className = "crypto-grid";
+
+    for (const coin of COINS) {
+      const card = document.createElement("div");
+      card.className = "crypto-card";
+
+      const inner = document.createElement("div");
+      inner.className = "crypto-card-inner";
+
+      const front = document.createElement("div");
+      front.className = "crypto-card-front";
+      const fc = document.createElement("div");
+      fc.className = "coin-circle";
+      fc.style.background = coin.color;
+      fc.textContent = coin.symbol;
+      front.appendChild(fc);
+      const fl = document.createElement("span");
+      fl.className = "coin-label";
+      fl.textContent = coin.name;
+      front.appendChild(fl);
+
+      const back = document.createElement("div");
+      back.className = "crypto-card-detail";
+
+      const qr = document.createElement("img");
+      qr.className = "qr-img";
+      qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(coin.address);
+      qr.alt = "QR Code";
+      back.appendChild(qr);
+
+      const addr = document.createElement("div");
+      addr.className = "wallet-addr";
+      addr.textContent = coin.address;
+      back.appendChild(addr);
+
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.textContent = "📋 Copy";
+      copyBtn.onclick = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(coin.address).then(() => {
+          copyBtn.textContent = "✅ Copied!";
+          setTimeout(() => { copyBtn.textContent = "📋 Copy"; }, 2000);
+        }).catch(() => {
+          copyBtn.textContent = "❌ Failed";
+        });
+      };
+      back.appendChild(copyBtn);
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+
+      card.onclick = (e) => {
+        if (copyBtn.contains(e.target)) return;
+        card.classList.toggle("flipped");
+      };
+
+      grid.appendChild(card);
+    }
+
+    crypto.appendChild(grid);
+    modal.appendChild(crypto);
+  }
+
   function getLangPrefix() {
     const m = path.match(/^\/([a-z]{2})\//);
     return m ? m[1] : "en";
@@ -273,6 +381,8 @@
       done: "Done",
       remove: "Remove",
       movie: "Movie",
+      support: "Support",
+      back: "Back",
       loading: "Loading...",
     },
     fr: {
@@ -304,6 +414,8 @@
       done: "Terminé",
       remove: "Supprimer",
       movie: "Film",
+      support: "Soutenir",
+      back: "Retour",
       loading: "Chargement...",
     },
     de: {
@@ -335,6 +447,8 @@
       done: "Fertig",
       remove: "Entfernen",
       movie: "Film",
+      support: "Unterstützen",
+      back: "Zurück",
       loading: "Laden...",
     },
     es: {
@@ -366,6 +480,8 @@
       done: "Hecho",
       remove: "Eliminar",
       movie: "Película",
+      support: "Apoyar",
+      back: "Volver",
       loading: "Cargando...",
     },
     pt: {
@@ -397,6 +513,8 @@
       done: "Concluído",
       remove: "Remover",
       movie: "Filme",
+      support: "Apoiar",
+      back: "Voltar",
       loading: "Carregando...",
     },
     ru: {
@@ -428,6 +546,8 @@
       done: "Готово",
       remove: "Удалить",
       movie: "Фильм",
+      support: "Поддержать",
+      back: "Назад",
       loading: "Загрузка...",
     },
     it: {
@@ -459,6 +579,8 @@
       done: "Fatto",
       remove: "Rimuovi",
       movie: "Film",
+      support: "Supporta",
+      back: "Indietro",
       loading: "Caricamento...",
     },
     pl: {
@@ -490,6 +612,8 @@
       done: "Gotowe",
       remove: "Usuń",
       movie: "Film",
+      support: "Wesprzyj",
+      back: "Wstecz",
       loading: "Ładowanie...",
     },
     tr: {
@@ -521,6 +645,8 @@
       done: "Tamam",
       remove: "Kaldır",
       movie: "Film",
+      support: "Destek",
+      back: "Geri",
       loading: "Yükleniyor...",
     },
   };
@@ -553,7 +679,9 @@
       '<div id="ororo-dl-watched" class="watched-section"></div>' +
       '<div id="ororo-dl-body"></div>' +
       '<div class="status-bar" id="ororo-dl-status"></div>' +
-      '<div class="error-msg" id="ororo-dl-error"></div>';
+      '<div class="error-msg" id="ororo-dl-error"></div>' +
+      '<div id="ororo-dl-donate-modal" class="donate-modal" style="display:none"></div>' +
+      '<button id="ororo-dl-donate-btn" class="donate-btn">❤️ ' + t("support") + '</button>';
     document.body.appendChild(panel);
 
     const titleEl = document.getElementById("ororo-dl-title");
@@ -564,6 +692,13 @@
     const errorEl = document.getElementById("ororo-dl-error");
 
     document.getElementById("ororo-dl-close").onclick = () => panel.remove();
+
+    const donateBtn = document.getElementById("ororo-dl-donate-btn");
+    const donateModal = document.getElementById("ororo-dl-donate-modal");
+    buildDonateModal();
+    donateBtn.onclick = () => {
+      panel.classList.add("donate-open");
+    };
 
     if (isMovie) {
       await initMovie(titleEl, subEl, bodyEl, watchedEl, statusBar, errorEl);
