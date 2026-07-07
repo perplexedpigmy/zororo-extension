@@ -239,9 +239,9 @@
   }
 
   const COINS = [
-    { id: "btc", name: "BTC", symbol: "₿", color: "#f7931a", address: "bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5" },
-    { id: "eth", name: "ETH", svg: '<svg width="100%" height="100%" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2L4 16L16 30Z" fill="#fff"/><path d="M16 2L28 16L16 30" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M4 16L16 30" stroke="#fff" stroke-width="2"/></svg>', color: "#627eea", address: "0x581b4810873698505FDF3aAf0a39430bb0D7d655" },
-    { id: "sol", name: "SOL", svg: '<svg width="100%" height="100%" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(-15,16,16)"><rect x="3" y="8" width="26" height="3" rx="1.5" fill="#fff"/><rect x="3" y="14.5" width="26" height="3" rx="1.5" fill="#fff"/><rect x="3" y="21" width="26" height="3" rx="1.5" fill="#fff"/></g></svg>', color: "#9945ff", address: "6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E" },
+    { id: "btc", name: "BTC", svg: '<svg viewBox="0 0 4091.27 4091.73" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M2947.77 1754.38c40.72,-272.26 -166.56,-418.61 -450,-516.24l91.95 -368.8 -224.5 -55.94 -89.51 359.09c-59.02,-14.72 -119.63,-28.59 -179.87,-42.34l90.16 -361.46 -224.36 -55.94 -92 368.68c-48.84,-11.12 -96.81,-22.11 -143.35,-33.69l0.26 -1.16 -309.59 -77.31 -59.72 239.78c0,0 166.56,38.18 163.05,40.53 90.91,22.69 107.35,82.87 104.62,130.57l-104.74 420.15c6.26,1.59 14.38,3.89 23.34,7.49 -7.49,-1.86 -15.46,-3.89 -23.73,-5.87l-146.81 588.57c-11.11,27.62 -39.31,69.07 -102.87,53.33 2.25,3.26 -163.17,-40.72 -163.17,-40.72l-111.46 256.98 292.15 72.83c54.35,13.63 107.61,27.89 160.06,41.3l-92.9 373.03 224.24 55.94 92 -369.07c61.26,16.63 120.71,31.97 178.91,46.43l-91.69 367.33 224.51 55.94 92.89 -372.33c382.82,72.45 670.67,43.24 791.83,-303.02 97.63,-278.78 -4.86,-439.58 -206.26,-544.44 146.69,-33.83 257.18,-130.31 286.64,-329.61l-0.07 -0.05zm-512.93 719.26c-69.38,278.78 -538.76,128.08 -690.94,90.29l123.28 -494.2c152.17,37.99 640.17,113.17 567.67,403.91zm69.43 -723.3c-63.29,253.58 -453.96,124.75 -580.69,93.16l111.77 -448.21c126.73,31.59 534.85,90.55 468.94,355.05l-0.02 0z"/></svg>', color: "#f7931a", address: "bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5" },
+    { id: "eth", name: "ETH", svg: '<svg viewBox="0 0 784.37 1277.39" xmlns="http://www.w3.org/2000/svg"><polygon fill="#fff" points="392.07,0 383.5,29.11 383.5,873.74 392.07,882.29 784.13,650.54 "/><polygon fill="#fff" points="392.07,0 -0,650.54 392.07,882.29 392.07,472.33 "/><polygon fill="#fff" points="392.07,956.52 387.24,962.41 387.24,1263.28 392.07,1277.38 784.37,724.89 "/><polygon fill="#fff" points="392.07,1277.38 392.07,956.52 -0,724.89 "/><polygon fill="#fff" points="392.07,882.29 784.13,650.54 392.07,472.33 "/><polygon fill="#fff" points="0,650.54 392.07,882.29 392.07,472.33 "/></svg>', color: "#627eea", address: "0x581b4810873698505FDF3aAf0a39430bb0D7d655" },
+    { id: "sol", name: "SOL", svg: '<svg viewBox="0 0 397.7 311.7" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M64.6,237.9c2.4-2.4,5.7-3.8,9.2-3.8h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,237.9z"/><path fill="#fff" d="M64.6,3.8C67.1,1.4,70.4,0,73.8,0h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,3.8z"/><path fill="#fff" d="M333.1,120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8,0-8.7,7-4.6,11.1l62.7,62.7c2.4,2.4,5.7,3.8,9.2,3.8h317.4c5.8,0,8.7-7,4.6-11.1L333.1,120.1z"/></svg>', color: "#9945ff", address: "6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E" },
   ];
 
   function buildDonateModal() {
@@ -256,7 +256,7 @@
 
     const h = document.createElement("h3");
     h.className = "donate-heading";
-    h.textContent = "❤️ " + t("support") + " Zororo";
+    h.textContent = t("donateHead");
     modal.appendChild(h);
 
     const coffee = document.createElement("div");
@@ -285,8 +285,7 @@
       const fc = document.createElement("div");
       fc.className = "coin-circle";
       fc.style.background = coin.color;
-      fc.textContent = coin.symbol;
-      if (coin.svg) fc.innerHTML = coin.svg;
+      fc.innerHTML = coin.svg;
       card.appendChild(fc);
       const fl = document.createElement("span");
       fl.className = "coin-label";
@@ -318,8 +317,7 @@
     const hc = document.createElement("span");
     hc.className = "coin-circle";
     hc.style.background = coin.color;
-    hc.textContent = coin.symbol;
-    if (coin.svg) hc.innerHTML = coin.svg;
+    hc.innerHTML = coin.svg;
     heading.appendChild(hc);
     const hl = document.createElement("span");
     hl.textContent = coin.name;
@@ -418,6 +416,7 @@
       movie: "Movie",
       support: "Support",
       back: "Back",
+      donateHead: "Enjoying Zororo? Your support keeps it alive ❤️",
       loading: "Loading...",
     },
     fr: {
@@ -451,6 +450,7 @@
       movie: "Film",
       support: "Soutenir",
       back: "Retour",
+      donateHead: "Vous aimez Zororo ? Votre soutien le maintient en vie ❤️",
       loading: "Chargement...",
     },
     de: {
@@ -484,6 +484,7 @@
       movie: "Film",
       support: "Unterstützen",
       back: "Zurück",
+      donateHead: "Gefällt dir Zororo? Deine Unterstützung hält es am Leben ❤️",
       loading: "Laden...",
     },
     es: {
@@ -517,6 +518,7 @@
       movie: "Película",
       support: "Apoyar",
       back: "Volver",
+      donateHead: "¿Disfrutas Zororo? Tu apoyo lo mantiene vivo ❤️",
       loading: "Cargando...",
     },
     pt: {
@@ -550,6 +552,7 @@
       movie: "Filme",
       support: "Apoiar",
       back: "Voltar",
+      donateHead: "Está gostando do Zororo? Seu apoio o mantém vivo ❤️",
       loading: "Carregando...",
     },
     ru: {
@@ -583,6 +586,7 @@
       movie: "Фильм",
       support: "Поддержать",
       back: "Назад",
+      donateHead: "Нравится Zororo? Ваша поддержка поддерживает его ❤️",
       loading: "Загрузка...",
     },
     it: {
@@ -616,6 +620,7 @@
       movie: "Film",
       support: "Supporta",
       back: "Indietro",
+      donateHead: "Ti piace Zororo? Il tuo supporto lo mantiene vivo ❤️",
       loading: "Caricamento...",
     },
     pl: {
@@ -649,6 +654,7 @@
       movie: "Film",
       support: "Wesprzyj",
       back: "Wstecz",
+      donateHead: "Podoba Ci się Zororo? Twoje wsparcie utrzymuje je przy życiu ❤️",
       loading: "Ładowanie...",
     },
     tr: {
@@ -682,6 +688,7 @@
       movie: "Film",
       support: "Destek",
       back: "Geri",
+      donateHead: "Zororo'yu beğendin mi? Desteğin onu hayatta tutuyor ❤️",
       loading: "Yükleniyor...",
     },
   };
