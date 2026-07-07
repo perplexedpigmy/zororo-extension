@@ -65,13 +65,13 @@
 }
 
 #ororo-dl-panel .season-group.incomplete .season-count {
-  color: #e74c3c;
+  color: #f39c12;
 }
 
 #ororo-dl-panel .season-missing {
   font-size: 10px;
-  color: #e74c3c;
-  background: rgba(231, 76, 60, 0.15);
+  color: #f39c12;
+  background: rgba(243, 156, 18, 0.2);
   padding: 1px 6px;
   border-radius: 8px;
   margin-left: 6px;
@@ -170,43 +170,6 @@
   color: #fff;
 }
 
-#ororo-dl-panel .dl-info {
-  margin-top: 14px;
-  padding: 10px 8px;
-  background: #0f0f1e;
-  border-radius: 6px;
-  font-size: 11px;
-  color: #777;
-  line-height: 1.6;
-}
-
-#ororo-dl-panel .dl-info-row {
-  display: flex;
-  gap: 6px;
-}
-
-#ororo-dl-panel .dl-info-row + .dl-info-row {
-  margin-top: 4px;
-}
-
-#ororo-dl-panel .dl-info-label {
-  flex-shrink: 0;
-}
-
-#ororo-dl-panel .dl-info-text {
-  color: #999;
-}
-
-#ororo-dl-panel .dl-info-text a {
-  color: #8c7ae6;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-#ororo-dl-panel .dl-info-text a:hover {
-  color: #a29bfe;
-}
-
 #ororo-dl-panel .watched-section {
   margin-top: 12px;
   padding: 10px 8px;
@@ -215,28 +178,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
-}
-
-#ororo-dl-panel .watched-checkbox {
-  accent-color: #6c5ce7;
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  cursor: pointer;
 }
 
 #ororo-dl-panel .watched-label {
   font-size: 13px;
   color: #ccc;
-  cursor: pointer;
   user-select: none;
 }
 
 #ororo-dl-panel .star-rating {
   display: inline-flex;
+  align-items: center;
   gap: 2px;
-  margin-left: auto;
 }
 
 #ororo-dl-panel .star-rating .star {
@@ -254,40 +207,6 @@
 #ororo-dl-panel .star-rating .star:hover,
 #ororo-dl-panel .star-rating .star.hover {
   color: #ffed4a;
-}
-
-#ororo-dl-panel .btn-watched-save {
-  background: #2d2d4e;
-  color: #ccc;
-  font-size: 11px;
-  padding: 4px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-#ororo-dl-panel .btn-watched-save:hover {
-  background: #3d3d6e;
-}
-
-#ororo-dl-panel .btn-watched-save.saved {
-  background: #00b894;
-  color: #fff;
-}
-
-#ororo-dl-panel .btn-watched-remove {
-  background: none;
-  border: none;
-  color: #666;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 2px 4px;
-  line-height: 1;
-}
-
-#ororo-dl-panel .btn-watched-remove:hover {
-  color: #ff6b6b;
 }
 
 .ororo-watched-panel.editing .movie-btn.remove {

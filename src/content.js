@@ -70,7 +70,7 @@
     const btn = document.createElement("button");
     btn.className = "favorites-tabs-control";
     btn.type = "button";
-    btn.textContent = "Watched";
+    btn.textContent = "Rated";
     li.appendChild(btn);
     tabList.appendChild(li);
 
@@ -131,7 +131,7 @@
       note.className = "favorites-note";
       const p = document.createElement("p");
       p.className = "favorites-note-text";
-      p.textContent = "No watched items yet. Mark a show or movie as watched to see it here.";
+      p.textContent = "No rated items yet. Rate a show or movie to see it here.";
       note.appendChild(p);
       list.appendChild(note);
       return;
@@ -255,27 +255,12 @@
     panel.id = "ororo-dl-panel";
     panel.innerHTML =
       '<button class="close-btn" id="ororo-dl-close">&times;</button>' +
-      '<h2 id="ororo-dl-title">Ororo Downloader</h2>' +
+      '<h2 id="ororo-dl-title">zororo</h2>' +
       '<p class="subtitle" id="ororo-dl-subtitle">Loading...</p>' +
-      '<div id="ororo-dl-body"></div>' +
       '<div id="ororo-dl-watched" class="watched-section"></div>' +
+      '<div id="ororo-dl-body"></div>' +
       '<div class="status-bar" id="ororo-dl-status"></div>' +
-      '<div class="error-msg" id="ororo-dl-error"></div>' +
-      '<div class="dl-info" id="ororo-dl-info">' +
-        '<div class="dl-info-row">' +
-          '<span class="dl-info-label">\uD83D\uDCC1</span>' +
-          '<span class="dl-info-text">Saves to <strong id="ororo-dl-path">Downloads/</strong></span>' +
-        '</div>' +
-        '<div class="dl-info-row">' +
-          '<span class="dl-info-label">\u2699</span>' +
-          '<span class="dl-info-text">' +
-            'Getting save dialogs? ' +
-            '<a href="#" id="ororo-dl-settings-link">' +
-              'Disable \u201cAsk where to save\u201d in browser settings' +
-            '</a>' +
-          '</span>' +
-        '</div>' +
-      '</div>';
+      '<div class="error-msg" id="ororo-dl-error"></div>';
     document.body.appendChild(panel);
 
     const titleEl = document.getElementById("ororo-dl-title");
@@ -284,19 +269,10 @@
     const watchedEl = document.getElementById("ororo-dl-watched");
     const statusBar = document.getElementById("ororo-dl-status");
     const errorEl = document.getElementById("ororo-dl-error");
-    const pathEl = document.getElementById("ororo-dl-path");
-    const infoEl = document.getElementById("ororo-dl-info");
 
     document.getElementById("ororo-dl-close").onclick = () => panel.remove();
-    document.getElementById("ororo-dl-settings-link").onclick = (e) => {
-      e.preventDefault();
-      window.open(navigator.userAgent.includes("Firefox") ? "about:preferences#general" : "chrome://settings/downloads", "_blank");
-    };
-
-    pathEl.textContent = "Downloads/" + config.rootDir + "/Show Name/s01/";
 
     if (isMovie) {
-      infoEl.style.display = "none";
       await initMovie(titleEl, subEl, bodyEl, watchedEl, statusBar, errorEl);
     } else {
       await initShow(titleEl, subEl, bodyEl, watchedEl, statusBar, errorEl);
@@ -338,7 +314,7 @@
 
       const watched = await loadWatched();
       const entry = watched.find((w) => w.id === "show_" + showId);
-      buildWatchedSection(watchedEl, "show_" + showId, showName, entry || null, statusBar);
+      buildWatchedSection(watchedEl, "show_" + showId, showName, entry || null);
     } catch (err) {
       const msgs = {
         AUTH_FAILED: "Not logged in. Sign in to ororo.tv first.",
@@ -400,29 +376,43 @@
 
     const watched = await loadWatched();
     const entry = watched.find((w) => w.id === "movie_" + showId);
-    buildWatchedSection(watchedEl, "movie_" + showId, showName, entry || null, statusBar);
+    buildWatchedSection(watchedEl, "movie_" + showId, showName, entry || null);
   }
 
-  function buildWatchedSection(watchedEl, id, title, entry, statusBar, poster) {
+  function buildWatchedSection(watchedEl, id, title, entry, poster) {
     watchedEl.replaceChildren();
-
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.className = "watched-checkbox";
-    cb.id = "ororo-dl-watched-cb";
-    cb.checked = !!entry;
-
-    const label = document.createElement("label");
-    label.className = "watched-label";
-    label.htmlFor = "ororo-dl-watched-cb";
-    label.textContent = "Watched";
 
     const stars = document.createElement("span");
     stars.className = "star-rating";
     let currentRating = entry ? entry.rating : 0;
 
+    async function handleStarClick(i) {
+      currentRating = currentRating === i ? 0 : i;
+      renderStars(currentRating);
+      if (currentRating > 0) {
+        const item = {
+          id: id,
+          type: isMovie ? "movie" : "show",
+          title: title,
+          slug: slug,
+          url: window.location.pathname,
+          rating: currentRating,
+          dateWatched: new Date().toISOString(),
+        };
+        const p = poster || posterUrl || tryGetPoster();
+        if (p) item.posterUrl = p;
+        await saveWatchedItem(item);
+      } else {
+        await removeWatchedItem(id);
+      }
+    }
+
     function renderStars(rating) {
       stars.replaceChildren();
+      const label = document.createElement("span");
+      label.className = "watched-label";
+      label.textContent = rating > 0 ? "Rated" : "Rate";
+      stars.appendChild(label);
       for (let i = 1; i <= 5; i++) {
         const s = document.createElement("span");
         s.className = "star" + (i <= rating ? " filled" : "");
@@ -430,13 +420,12 @@
         s.dataset.value = String(i);
         s.onmouseenter = () => {
           for (const child of stars.children) {
-            child.classList.toggle("hover", Number(child.dataset.value) <= i);
+            if (child.dataset && child.dataset.value) {
+              child.classList.toggle("hover", Number(child.dataset.value) <= i);
+            }
           }
         };
-        s.onclick = () => {
-          currentRating = currentRating === i ? 0 : i;
-          renderStars(currentRating);
-        };
+        s.onclick = () => handleStarClick(i);
         stars.appendChild(s);
       }
       stars.onmouseleave = () => {
@@ -447,45 +436,7 @@
     }
     renderStars(currentRating);
 
-    const saveBtn = document.createElement("button");
-    saveBtn.className = "btn-watched-save" + (entry ? " saved" : "");
-    saveBtn.textContent = entry ? "Saved" : "Save";
-
-    saveBtn.onclick = async () => {
-      if (cb.checked || !entry) {
-        cb.checked = true;
-        const item = {
-          id: id,
-          type: isMovie ? "movie" : "show",
-          title: title,
-          slug: slug,
-          url: window.location.pathname,
-          rating: currentRating,
-          dateWatched: new Date().toISOString(),
-        };
-        const p = posterUrl || poster || tryGetPoster();
-        if (p) item.posterUrl = p;
-        await saveWatchedItem(item);
-        entry = item;
-        saveBtn.classList.add("saved");
-        saveBtn.textContent = "Saved";
-        statusBar.textContent = "Saved to watched list.";
-        statusBar.classList.add("visible");
-      } else {
-        await removeWatchedItem(id);
-        entry = null;
-        saveBtn.classList.remove("saved");
-        saveBtn.textContent = "Save";
-        statusBar.textContent = "Removed from watched list.";
-        statusBar.classList.add("visible");
-      }
-      setTimeout(() => statusBar.classList.remove("visible"), 2000);
-    };
-
-    watchedEl.appendChild(cb);
-    watchedEl.appendChild(label);
     watchedEl.appendChild(stars);
-    watchedEl.appendChild(saveBtn);
   }
 
   function renderDownloadSection(bodyEl, titleEl, subEl, statusBar, errorEl) {

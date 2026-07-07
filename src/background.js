@@ -19,7 +19,7 @@ function broadcast() {
 }
 
 async function getConfig() {
-  const defaults = { rootDir: "OroroTV", subtitleLangs: ["en"], defaultSubLang: "en" };
+  const defaults = { rootDir: "OroroTV" };
   const data = await chrome.storage.sync.get(Object.keys(defaults));
   return { ...defaults, ...data };
 }
@@ -64,14 +64,11 @@ async function processItem(item) {
       saveAs: false,
     });
 
-    const wantedLangs = config.subtitleLangs || ["en"];
-    const defaultLang = config.defaultSubLang || wantedLangs[0];
-    for (const sub of (item.subtitles || []).filter((s) => wantedLangs.includes(s.lang))) {
+    for (const sub of (item.subtitles || [])) {
       try {
-        const suffix = sub.lang === defaultLang ? "" : "." + sub.lang;
         await chrome.downloads.download({
           url: sub.url,
-          filename: `${epFile}${suffix}.srt`,
+          filename: `${epFile}.${sub.lang}.srt`,
           conflictAction: "uniquify",
           saveAs: false,
         });

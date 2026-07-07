@@ -144,9 +144,9 @@ async function renderWatched() {
   if (watched.length === 0) {
     const empty = document.createElement("div");
     empty.className = "empty";
-    empty.appendChild(document.createTextNode("No watched items yet."));
+    empty.appendChild(document.createTextNode("No rated items yet."));
     empty.appendChild(document.createElement("br"));
-    empty.appendChild(document.createTextNode("Mark a show or movie as watched to see it here."));
+    empty.appendChild(document.createTextNode("Rate a show or movie to see it here."));
     listEl.appendChild(empty);
     return;
   }

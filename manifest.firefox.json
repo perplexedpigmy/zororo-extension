@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Ororo TV Downloader",
+  "name": "zororo",
   "version": "1.9.0",
-  "description": "Download shows from ororo.tv — all seasons or a specific season with subtitles.",
+  "description": "Download shows from ororo.tv.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "ororo-downloader@example.com",
+      "id": "zororo@example.com",
       "strict_min_version": "142.0",
       "data_collection_permissions": {
         "required": [
@@ -30,7 +30,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Ororo Downloader"
+    "default_title": "zororo"
   },
   "options_ui": {
     "page": "options.html",
