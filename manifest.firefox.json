@@ -3,7 +3,7 @@
   "name": "Zororo",
   "version": "1.0.0",
   "description": "One-click downloader for ororo.tv shows and movies with auto-skip, subtitle selection, star ratings, and queue management.",
-  "homepage_url": "https://github.com/xmousse/zororo-extension",
+  "homepage_url": "https://github.com/perplexedpigmy/zororo-extension",
   "browser_specific_settings": {
     "gecko": {
       "id": "zororo@xmousse.com",
