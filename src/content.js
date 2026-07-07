@@ -285,7 +285,7 @@
       const fc = document.createElement("div");
       fc.className = "coin-circle";
       fc.style.background = coin.color;
-      fc.innerHTML = coin.svg;
+      fc.appendChild(document.createRange().createContextualFragment(coin.svg));
       card.appendChild(fc);
       const fl = document.createElement("span");
       fl.className = "coin-label";
@@ -317,7 +317,7 @@
     const hc = document.createElement("span");
     hc.className = "coin-circle";
     hc.style.background = coin.color;
-    hc.innerHTML = coin.svg;
+    hc.appendChild(document.createRange().createContextualFragment(coin.svg));
     heading.appendChild(hc);
     const hl = document.createElement("span");
     hl.textContent = coin.name;
@@ -714,7 +714,7 @@
 
     const panel = document.createElement("div");
     panel.id = "ororo-dl-panel";
-    panel.innerHTML =
+    panel.appendChild(document.createRange().createContextualFragment(
       '<button class="close-btn" id="ororo-dl-close">&times;</button>' +
       '<h2 id="ororo-dl-title">zororo</h2>' +
       '<p class="subtitle" id="ororo-dl-subtitle">' + t("loading") + '</p>' +
@@ -723,7 +723,8 @@
       '<div class="status-bar" id="ororo-dl-status"></div>' +
       '<div class="error-msg" id="ororo-dl-error"></div>' +
       '<div id="ororo-dl-donate-modal" class="donate-modal"></div>' +
-      '<button id="ororo-dl-donate-btn" class="donate-btn">❤️ ' + t("support") + '</button>';
+      '<button id="ororo-dl-donate-btn" class="donate-btn">❤️ ' + t("support") + '</button>'
+    ));
     document.body.appendChild(panel);
 
     const titleEl = document.getElementById("ororo-dl-title");
