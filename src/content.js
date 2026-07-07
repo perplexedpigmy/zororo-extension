@@ -240,8 +240,8 @@
 
   const COINS = [
     { id: "btc", name: "BTC", symbol: "₿", color: "#f7931a", address: "bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5" },
-    { id: "eth", name: "ETH", svg: '<svg width="100%" height="100%" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><polygon points="16,2 28,16 16,30 4,16" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><polygon points="16,2 16,30 4,16" fill="#fff" opacity="0.35"/></svg>', color: "#627eea", address: "0x581b4810873698505FDF3aAf0a39430bb0D7d655" },
-    { id: "sol", name: "SOL", svg: '<svg width="100%" height="100%" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><line x1="6" y1="9" x2="26" y2="9" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/><line x1="6" y1="16" x2="26" y2="16" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/><line x1="6" y1="23" x2="26" y2="23" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>', color: "#9945ff", address: "6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E" },
+    { id: "eth", name: "ETH", svg: '<svg width="100%" height="100%" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2L4 16L16 30Z" fill="#fff"/><path d="M16 2L28 16L16 30" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M4 16L16 30" stroke="#fff" stroke-width="2"/></svg>', color: "#627eea", address: "0x581b4810873698505FDF3aAf0a39430bb0D7d655" },
+    { id: "sol", name: "SOL", svg: '<svg width="100%" height="100%" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(-15,16,16)"><rect x="3" y="8" width="26" height="3" rx="1.5" fill="#fff"/><rect x="3" y="14.5" width="26" height="3" rx="1.5" fill="#fff"/><rect x="3" y="21" width="26" height="3" rx="1.5" fill="#fff"/></g></svg>', color: "#9945ff", address: "6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E" },
   ];
 
   function buildDonateModal() {

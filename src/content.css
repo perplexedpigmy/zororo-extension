@@ -382,7 +382,7 @@
   border: 1px solid #333;
   border-radius: 16px;
   padding: 24px;
-  width: 380px;
+  width: 460px;
   max-width: 90vw;
   display: flex;
   flex-direction: column;
@@ -441,18 +441,9 @@
   font-size: 11px;
   color: #aaa;
   white-space: nowrap;
-  overflow-x: auto;
-  display: block;
+  overflow: hidden;
   font-family: monospace;
   line-height: 1.4;
-  padding-bottom: 2px;
-}
-#ororo-crypto-overlay .crypto-addr::-webkit-scrollbar {
-  height: 2px;
-}
-#ororo-crypto-overlay .crypto-addr::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 2px;
 }
 #ororo-crypto-overlay .crypto-addr.copied {
   color: #00b894;
