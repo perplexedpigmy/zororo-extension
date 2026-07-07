@@ -70,7 +70,7 @@
     const btn = document.createElement("button");
     btn.className = "favorites-tabs-control";
     btn.type = "button";
-    btn.textContent = "Rated";
+    btn.textContent = t("ratedTab");
     li.appendChild(btn);
     tabList.appendChild(li);
 
@@ -92,11 +92,11 @@
     const editLink = document.createElement("a");
     editLink.className = "js-fav-edit";
     editLink.href = "#";
-    editLink.textContent = "Edit";
+    editLink.textContent = t("edit");
     editLink.onclick = (e) => {
       e.preventDefault();
       panel.classList.toggle("editing");
-      editLink.textContent = panel.classList.contains("editing") ? "Done" : "Edit";
+      editLink.textContent = panel.classList.contains("editing") ? t("done") : t("edit");
     };
     markArea.appendChild(editLink);
     foot.appendChild(removeArea);
@@ -131,7 +131,7 @@
       note.className = "favorites-note";
       const p = document.createElement("p");
       p.className = "favorites-note-text";
-      p.textContent = "No rated items yet. Rate a show or movie to see it here.";
+      p.textContent = t("ratedEmpty");
       note.appendChild(p);
       list.appendChild(note);
       return;
@@ -193,7 +193,7 @@
       const delBtn = document.createElement("a");
       delBtn.className = "movie-btn remove";
       delBtn.href = "#";
-      delBtn.textContent = "Remove";
+      delBtn.textContent = t("remove");
       delBtn.style.display = "none";
       delBtn.onclick = (e) => {
         e.preventDefault();
@@ -243,6 +243,206 @@
     return m ? m[1] : "en";
   }
 
+  const LOCALES = {
+    en: {
+      rate: "Rate",
+      rated: "Rated",
+      ratedTab: "Rated",
+      ratedEmpty: "No rated items yet. Rate a show or movie to see it here.",
+      download: "Download Selected",
+      selectAll: "Select All",
+      clear: "Clear",
+      season: "Season {n}",
+      ofFormat: "{released} of {total} ep.",
+      missing: "{count} missing",
+      episodesCount: "{count} episodes · {seasons} seasons",
+      resolving: "Resolving episode links...",
+      resolvingProgress: "Resolving {current} of {total}...",
+      checking: "Checking for existing downloads...",
+      allDownloaded: "All episodes already downloaded.",
+      queued: "Queued {count} episode(s).",
+      skipped: "Skipped {count} (already on disk).",
+      selectSeason: "Select at least one season.",
+      resolveFailed: "Could not resolve any episode URLs.",
+      authFailed: "Not logged in. Sign in to ororo.tv first.",
+      freeLimit: "Free limit reached. Upgrade your plan to download.",
+      showNotFound: "Could not find this show. Try reloading.",
+      loadFailed: "Failed to load show data",
+      extensionError: "Extension error. Check console or reload.",
+      edit: "Edit",
+      done: "Done",
+      remove: "Remove",
+      movie: "Movie",
+      loading: "Loading...",
+    },
+    fr: {
+      rate: "Noter",
+      rated: "Noté",
+      ratedTab: "Notés",
+      ratedEmpty: "Aucun élément noté. Notez un film ou une série pour le voir ici.",
+      download: "Télécharger la sélection",
+      selectAll: "Tout sélectionner",
+      clear: "Effacer",
+      season: "Saison {n}",
+      ofFormat: "{released} sur {total} ép.",
+      missing: "{count} manquant(s)",
+      episodesCount: "{count} épisodes · {seasons} saisons",
+      resolving: "Résolution des épisodes...",
+      resolvingProgress: "Résolution {current} sur {total}...",
+      checking: "Vérification des téléchargements existants...",
+      allDownloaded: "Tous les épisodes déjà téléchargés.",
+      queued: "{count} épisode(s) en file d'attente.",
+      skipped: "{count} ignoré(s) (déjà sur le disque).",
+      selectSeason: "Sélectionnez au moins une saison.",
+      resolveFailed: "Impossible de résoudre les URLs des épisodes.",
+      authFailed: "Non connecté. Connectez-vous d'abord à ororo.tv.",
+      freeLimit: "Limite gratuite atteinte. Améliorez votre abonnement pour télécharger.",
+      showNotFound: "Impossible de trouver cette série. Essayez de recharger.",
+      loadFailed: "Échec du chargement des données",
+      extensionError: "Erreur d'extension. Vérifiez la console ou rechargez.",
+      edit: "Modifier",
+      done: "Terminé",
+      remove: "Supprimer",
+      movie: "Film",
+      loading: "Chargement...",
+    },
+    de: {
+      rate: "Bewerten",
+      rated: "Bewertet",
+      ratedTab: "Bewertet",
+      ratedEmpty: "Noch keine Bewertungen. Bewerten Sie eine Serie oder einen Film, um sie hier zu sehen.",
+      download: "Auswahl herunterladen",
+      selectAll: "Alle auswählen",
+      clear: "Leeren",
+      season: "Staffel {n}",
+      ofFormat: "{released} von {total} Ep.",
+      missing: "{count} fehlen",
+      episodesCount: "{count} Episoden · {seasons} Staffeln",
+      resolving: "Löse Episoden-Links auf...",
+      resolvingProgress: "Auflösen {current} von {total}...",
+      checking: "Prüfe vorhandene Downloads...",
+      allDownloaded: "Alle Episoden bereits heruntergeladen.",
+      queued: "{count} Episode(n) in der Warteschlange.",
+      skipped: "{count} übersprungen (bereits auf der Festplatte).",
+      selectSeason: "Wählen Sie mindestens eine Staffel aus.",
+      resolveFailed: "Konnte keine Episoden-URLs auflösen.",
+      authFailed: "Nicht angemeldet. Melden Sie sich zuerst bei ororo.tv an.",
+      freeLimit: "Kostenloses Limit erreicht. Upgrade Ihres Abos zum Herunterladen.",
+      showNotFound: "Diese Serie wurde nicht gefunden. Versuchen Sie es mit einem Neuladen.",
+      loadFailed: "Laden der Daten fehlgeschlagen",
+      extensionError: "Erweiterungsfehler. Überprüfen Sie die Konsole oder laden Sie neu.",
+      edit: "Bearbeiten",
+      done: "Fertig",
+      remove: "Entfernen",
+      movie: "Film",
+      loading: "Laden...",
+    },
+    es: {
+      rate: "Puntuar",
+      rated: "Puntuado",
+      ratedTab: "Puntuados",
+      ratedEmpty: "Aún no hay elementos puntuados. Puntúe una serie o película para verla aquí.",
+      download: "Descargar selección",
+      selectAll: "Seleccionar todo",
+      clear: "Limpiar",
+      season: "Temporada {n}",
+      ofFormat: "{released} de {total} ep.",
+      missing: "{count} faltan",
+      episodesCount: "{count} episodios · {seasons} temporadas",
+      resolving: "Resolviendo enlaces de episodios...",
+      resolvingProgress: "Resolviendo {current} de {total}...",
+      checking: "Verificando descargas existentes...",
+      allDownloaded: "Todos los episodios ya descargados.",
+      queued: "{count} episodio(s) en cola.",
+      skipped: "{count} omitido(s) (ya en disco).",
+      selectSeason: "Seleccione al menos una temporada.",
+      resolveFailed: "No se pudieron resolver las URL de los episodios.",
+      authFailed: "No has iniciado sesión. Inicia sesión en ororo.tv primero.",
+      freeLimit: "Límite gratuito alcanzado. Mejora tu plan para descargar.",
+      showNotFound: "No se pudo encontrar esta serie. Intenta recargar.",
+      loadFailed: "Error al cargar los datos",
+      extensionError: "Error de extensión. Revisa la consola o recarga.",
+      edit: "Editar",
+      done: "Hecho",
+      remove: "Eliminar",
+      movie: "Película",
+      loading: "Cargando...",
+    },
+    pt: {
+      rate: "Avaliar",
+      rated: "Avaliado",
+      ratedTab: "Avaliados",
+      ratedEmpty: "Nenhum item avaliado ainda. Avalie uma série ou filme para vê-lo aqui.",
+      download: "Baixar seleção",
+      selectAll: "Selecionar tudo",
+      clear: "Limpar",
+      season: "Temporada {n}",
+      ofFormat: "{released} de {total} ep.",
+      missing: "{count} faltando",
+      episodesCount: "{count} episódios · {seasons} temporadas",
+      resolving: "Resolvendo links dos episódios...",
+      resolvingProgress: "Resolvendo {current} de {total}...",
+      checking: "Verificando downloads existentes...",
+      allDownloaded: "Todos os episódios já baixados.",
+      queued: "{count} episódio(s) na fila.",
+      skipped: "{count} pulado(s) (já no disco).",
+      selectSeason: "Selecione pelo menos uma temporada.",
+      resolveFailed: "Não foi possível resolver as URLs dos episódios.",
+      authFailed: "Não está logado. Faça login no ororo.tv primeiro.",
+      freeLimit: "Limite gratuito atingido. Atualize seu plano para baixar.",
+      showNotFound: "Não foi possível encontrar esta série. Tente recarregar.",
+      loadFailed: "Falha ao carregar dados",
+      extensionError: "Erro de extensão. Verifique o console ou recarregue.",
+      edit: "Editar",
+      done: "Concluído",
+      remove: "Remover",
+      movie: "Filme",
+      loading: "Carregando...",
+    },
+    ru: {
+      rate: "Оценить",
+      rated: "Оценено",
+      ratedTab: "Оценённые",
+      ratedEmpty: "Нет оценённых элементов. Оцените шоу или фильм, чтобы увидеть его здесь.",
+      download: "Скачать выбранное",
+      selectAll: "Выбрать всё",
+      clear: "Очистить",
+      season: "Сезон {n}",
+      ofFormat: "{released} из {total} эп.",
+      missing: "{count} отсутствует",
+      episodesCount: "{count} эпизодов · {seasons} сезонов",
+      resolving: "Разрешение ссылок эпизодов...",
+      resolvingProgress: "Разрешение {current} из {total}...",
+      checking: "Проверка существующих загрузок...",
+      allDownloaded: "Все эпизоды уже скачаны.",
+      queued: "{count} эпизод(ы) в очереди.",
+      skipped: "{count} пропущено (уже на диске).",
+      selectSeason: "Выберите хотя бы один сезон.",
+      resolveFailed: "Не удалось разрешить URL эпизодов.",
+      authFailed: "Не авторизованы. Сначала войдите в ororo.tv.",
+      freeLimit: "Достигнут бесплатный лимит. Обновите тариф для скачивания.",
+      showNotFound: "Не удалось найти это шоу. Попробуйте перезагрузить.",
+      loadFailed: "Не удалось загрузить данные",
+      extensionError: "Ошибка расширения. Проверьте консоль или перезагрузите.",
+      edit: "Редактировать",
+      done: "Готово",
+      remove: "Удалить",
+      movie: "Фильм",
+      loading: "Загрузка...",
+    },
+  };
+
+  function t(key, params = {}) {
+    const lang = getLangPrefix();
+    const locale = LOCALES[lang] || LOCALES["en"];
+    let str = locale[key];
+    if (!str) str = LOCALES["en"][key] || key;
+    for (const [k, v] of Object.entries(params)) {
+      str = str.replace(new RegExp("\\{" + k + "\\}", "g"), v);
+    }
+    return str;
+  }
+
   if (isShow || isMovie) {
     initContentPanel();
   }
@@ -256,7 +456,7 @@
     panel.innerHTML =
       '<button class="close-btn" id="ororo-dl-close">&times;</button>' +
       '<h2 id="ororo-dl-title">zororo</h2>' +
-      '<p class="subtitle" id="ororo-dl-subtitle">Loading...</p>' +
+      '<p class="subtitle" id="ororo-dl-subtitle">' + t("loading") + '</p>' +
       '<div id="ororo-dl-watched" class="watched-section"></div>' +
       '<div id="ororo-dl-body"></div>' +
       '<div class="status-bar" id="ororo-dl-status"></div>' +
@@ -309,7 +509,7 @@
       const seasonSet = new Set(episodes.map((e) => e.season));
       seasons = Array.from(seasonSet).sort((a, b) => a - b);
 
-      subEl.textContent = episodes.length + " episodes \u00b7 " + seasons.length + " seasons";
+      subEl.textContent = t("episodesCount", { count: episodes.length, seasons: seasons.length });
       renderDownloadSection(bodyEl, titleEl, subEl, statusBar, errorEl);
 
       const watched = await loadWatched();
@@ -317,13 +517,13 @@
       buildWatchedSection(watchedEl, "show_" + showId, showName, entry || null);
     } catch (err) {
       const msgs = {
-        AUTH_FAILED: "Not logged in. Sign in to ororo.tv first.",
-        FREE_LIMIT: "Free limit reached. Upgrade your plan to download.",
-        SHOW_NOT_FOUND: "Could not find this show. Try reloading."
+        AUTH_FAILED: t("authFailed"),
+        FREE_LIMIT: t("freeLimit"),
+        SHOW_NOT_FOUND: t("showNotFound"),
       };
-      errorEl.textContent = msgs[err.message] || "Failed to load: " + err.message;
+      errorEl.textContent = msgs[err.message] || t("loadFailed") + ": " + err.message;
       errorEl.classList.add("visible");
-      subEl.textContent = "Failed to load show data";
+      subEl.textContent = t("loadFailed");
     }
   }
 
@@ -355,12 +555,12 @@
       }
     } catch (err) {
       const msgs = {
-        AUTH_FAILED: "Not logged in. Sign in to ororo.tv first.",
-        FREE_LIMIT: "Free limit reached. Upgrade your plan to download."
+        AUTH_FAILED: t("authFailed"),
+        FREE_LIMIT: t("freeLimit"),
       };
-      errorEl.textContent = msgs[err.message] || "Failed to load: " + err.message;
+      errorEl.textContent = msgs[err.message] || t("loadFailed") + ": " + err.message;
       errorEl.classList.add("visible");
-      subEl.textContent = "Failed to load movie data";
+      subEl.textContent = t("loadFailed");
       return;
     }
 
@@ -371,7 +571,7 @@
     }
 
     titleEl.textContent = showName;
-    subEl.textContent = "Movie";
+    subEl.textContent = t("movie");
     bodyEl.style.display = "none";
 
     const watched = await loadWatched();
@@ -411,7 +611,7 @@
       stars.replaceChildren();
       const label = document.createElement("span");
       label.className = "watched-label";
-      label.textContent = rating > 0 ? "Rated" : "Rate";
+      label.textContent = rating > 0 ? t("rated") : t("rate");
       stars.appendChild(label);
       for (let i = 1; i <= 5; i++) {
         const s = document.createElement("span");
@@ -455,7 +655,7 @@
     const goBtn = document.createElement("button");
     goBtn.className = "btn-download";
     goBtn.id = "ororo-dl-go";
-    goBtn.textContent = "Download Selected";
+    goBtn.textContent = t("download");
     actions1.appendChild(goBtn);
     wrap.appendChild(actions1);
 
@@ -464,11 +664,11 @@
     const selBtn = document.createElement("button");
     selBtn.className = "btn-select-all";
     selBtn.id = "ororo-dl-select-all";
-    selBtn.textContent = "Select All";
+    selBtn.textContent = t("selectAll");
     const deselBtn = document.createElement("button");
     deselBtn.className = "btn-deselect-all";
     deselBtn.id = "ororo-dl-deselect-all";
-    deselBtn.textContent = "Clear";
+    deselBtn.textContent = t("clear");
     actions2.appendChild(selBtn);
     actions2.appendChild(deselBtn);
     wrap.appendChild(actions2);
@@ -495,10 +695,10 @@
       cb.dataset.season = String(s);
       cb.checked = !incomplete;
       const span = document.createElement("span");
-      span.textContent = "Season " + s;
+      span.textContent = t("season", { n: s });
       const count = document.createElement("span");
       count.className = "season-count";
-      count.textContent = incomplete ? released + " of " + total + " ep." : total + " ep.";
+      count.textContent = incomplete ? t("ofFormat", { released, total }) : total + " ep.";
       const label = document.createElement("label");
       label.appendChild(cb);
       label.appendChild(span);
@@ -506,7 +706,7 @@
       if (incomplete) {
         const badge = document.createElement("span");
         badge.className = "season-missing";
-        badge.textContent = upcoming + " missing";
+        badge.textContent = t("missing", { count: upcoming });
         label.appendChild(badge);
       }
       const div = document.createElement("div");
@@ -526,20 +726,20 @@
       const selected = Array.from(document.querySelectorAll(".ororo-dl-season-cb:checked"))
         .map((cb) => parseInt(cb.dataset.season, 10));
       if (selected.length === 0) {
-        errorEl.textContent = "Select at least one season.";
+        errorEl.textContent = t("selectSeason");
         errorEl.classList.add("visible");
         return;
       }
 
       errorEl.classList.remove("visible");
       goBtn.disabled = true;
-      goBtn.textContent = "Resolving episode links...";
+      goBtn.textContent = t("resolving");
 
       const epsToDl = episodes.filter((e) => selected.includes(e.season));
       const resolved = [];
 
       for (let i = 0; i < epsToDl.length; i++) {
-        statusBar.textContent = "Resolving " + (i + 1) + " of " + epsToDl.length + "...";
+        statusBar.textContent = t("resolvingProgress", { current: i + 1, total: epsToDl.length });
         statusBar.classList.add("visible");
         try {
           const item = await resolveEpisode(epsToDl[i]);
@@ -551,33 +751,33 @@
       }
 
       if (resolved.length === 0) {
-        errorEl.textContent = "Could not resolve any episode URLs.";
+        errorEl.textContent = t("resolveFailed");
         errorEl.classList.add("visible");
         goBtn.disabled = false;
-        goBtn.textContent = "Download Selected";
+          goBtn.textContent = t("download");
         statusBar.classList.remove("visible");
         return;
       }
 
-      goBtn.textContent = "Checking for existing downloads...";
+      goBtn.textContent = t("checking");
 
       chrome.runtime.sendMessage(
         { type: "start-download", showName: showName, episodes: resolved },
         (resp) => {
           if (chrome.runtime.lastError) {
-            errorEl.textContent = "Extension error. Check console or reload.";
+            errorEl.textContent = t("extensionError");
             errorEl.classList.add("visible");
           } else if (resp.queued === 0) {
-            statusBar.textContent = "All episodes already downloaded.";
+            statusBar.textContent = t("allDownloaded");
             statusBar.classList.add("visible");
           } else {
-            const parts = ["Queued " + resp.queued + " episode(s)."];
-            if (resp.skipped > 0) parts.push("Skipped " + resp.skipped + " (already on disk).");
+            const parts = [t("queued", { count: resp.queued })];
+            if (resp.skipped > 0) parts.push(t("skipped", { count: resp.skipped }));
             statusBar.textContent = parts.join(" ");
             statusBar.classList.add("visible");
           }
           goBtn.disabled = false;
-          goBtn.textContent = "Download Selected";
+    goBtn.textContent = t("download");
         }
       );
     };
