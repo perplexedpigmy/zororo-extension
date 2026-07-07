@@ -261,10 +261,6 @@
 
     const coffee = document.createElement("div");
     coffee.className = "donate-section";
-    const ct = document.createElement("h4");
-    ct.className = "donate-section-title";
-    ct.textContent = "☕ Buy me a coffee";
-    coffee.appendChild(ct);
     const cl = document.createElement("a");
     cl.href = "https://www.buymeacoffee.com/pipolarbear";
     cl.target = "_blank";
@@ -286,64 +282,101 @@
     for (const coin of COINS) {
       const card = document.createElement("div");
       card.className = "crypto-card";
-
-      const inner = document.createElement("div");
-      inner.className = "crypto-card-inner";
-
-      const front = document.createElement("div");
-      front.className = "crypto-card-front";
       const fc = document.createElement("div");
       fc.className = "coin-circle";
       fc.style.background = coin.color;
       fc.textContent = coin.symbol;
-      front.appendChild(fc);
+      card.appendChild(fc);
       const fl = document.createElement("span");
       fl.className = "coin-label";
       fl.textContent = coin.name;
-      front.appendChild(fl);
-
-      const back = document.createElement("div");
-      back.className = "crypto-card-detail";
-
-      const qr = document.createElement("img");
-      qr.className = "qr-img";
-      qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(coin.address);
-      qr.alt = "QR Code";
-      back.appendChild(qr);
-
-      const addr = document.createElement("div");
-      addr.className = "wallet-addr";
-      addr.textContent = coin.address;
-      back.appendChild(addr);
-
-      const copyBtn = document.createElement("button");
-      copyBtn.className = "copy-btn";
-      copyBtn.textContent = "📋 Copy";
-      copyBtn.onclick = (e) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(coin.address).then(() => {
-          copyBtn.textContent = "✅ Copied!";
-          setTimeout(() => { copyBtn.textContent = "📋 Copy"; }, 2000);
-        }).catch(() => {
-          copyBtn.textContent = "❌ Failed";
-        });
-      };
-      back.appendChild(copyBtn);
-
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
-
-      card.onclick = (e) => {
-        if (copyBtn.contains(e.target)) return;
-        card.classList.toggle("flipped");
-      };
-
+      card.appendChild(fl);
+      card.onclick = () => showCryptoOverlay(coin);
       grid.appendChild(card);
     }
 
     crypto.appendChild(grid);
     modal.appendChild(crypto);
+  }
+
+  function showCryptoOverlay(coin) {
+    const overlay = document.createElement("div");
+    overlay.id = "ororo-crypto-overlay";
+
+    const modal = document.createElement("div");
+    modal.className = "crypto-modal";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "crypto-modal-close";
+    closeBtn.textContent = "✕";
+    closeBtn.onclick = () => overlay.remove();
+    modal.appendChild(closeBtn);
+
+    const heading = document.createElement("div");
+    heading.className = "crypto-modal-heading";
+    const hc = document.createElement("span");
+    hc.className = "coin-circle";
+    hc.style.background = coin.color;
+    hc.textContent = coin.symbol;
+    heading.appendChild(hc);
+    const hl = document.createElement("span");
+    hl.textContent = coin.name;
+    heading.appendChild(hl);
+    modal.appendChild(heading);
+
+    const qr = document.createElement("img");
+    qr.className = "crypto-modal-qr";
+    qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(coin.address);
+    qr.alt = "QR Code";
+    modal.appendChild(qr);
+
+    const addrLine = document.createElement("div");
+    addrLine.className = "crypto-addr-line";
+
+    const addrText = document.createElement("span");
+    addrText.className = "crypto-addr";
+    addrText.textContent = coin.address;
+
+    const copyIcon = document.createElement("span");
+    copyIcon.className = "crypto-copy-icon";
+    copyIcon.textContent = "📋";
+
+    function copyAddr() {
+      navigator.clipboard.writeText(coin.address).then(() => {
+        const text = addrText.textContent;
+        addrText.textContent = "✅ Copied";
+        addrText.classList.add("copied");
+        copyIcon.textContent = "✅";
+        setTimeout(() => {
+          addrText.textContent = text;
+          addrText.classList.remove("copied");
+          copyIcon.textContent = "📋";
+        }, 2000);
+      }).catch(() => {});
+    }
+
+    addrText.onclick = copyAddr;
+    copyIcon.onclick = (e) => { e.stopPropagation(); copyAddr(); };
+
+    addrLine.appendChild(addrText);
+    addrLine.appendChild(copyIcon);
+    modal.appendChild(addrLine);
+
+    overlay.appendChild(modal);
+
+    overlay.onclick = (e) => {
+      if (e.target === overlay) overlay.remove();
+    };
+
+    function escHandler(e) {
+      if (e.key === "Escape" && document.body.contains(overlay)) overlay.remove();
+    }
+    document.addEventListener("keydown", escHandler);
+
+    overlay._cleanup = () => document.removeEventListener("keydown", escHandler);
+    overlay.addEventListener("remove", () => overlay._cleanup(), { once: true });
+
+    document.body.appendChild(overlay);
   }
 
   function getLangPrefix() {
