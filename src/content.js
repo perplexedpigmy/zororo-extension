@@ -680,7 +680,7 @@
       '<div id="ororo-dl-body"></div>' +
       '<div class="status-bar" id="ororo-dl-status"></div>' +
       '<div class="error-msg" id="ororo-dl-error"></div>' +
-      '<div id="ororo-dl-donate-modal" class="donate-modal" style="display:none"></div>' +
+      '<div id="ororo-dl-donate-modal" class="donate-modal"></div>' +
       '<button id="ororo-dl-donate-btn" class="donate-btn">❤️ ' + t("support") + '</button>';
     document.body.appendChild(panel);
 
