@@ -85,23 +85,20 @@ The popup and options pages are always in English.
 
 ---
 
+## Support
+
+If you find this app useful, consider supporting its development:
+
+[![Ko-fi](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=black)](https://ko-fi.com/pipolarbear)
+
 <details>
-<summary><strong>❤️ Support Zororo</strong></summary>
+<summary><b>Cryptocurrency</b></summary>
 
-<br>
-
-If this extension helps you, consider supporting development:
-
-### ☕ Buy me a coffee
-
-[b两极polarbear](https://buymeacoffee.com/pipolarbear)
-
-### Cryptocurrency
-
-| BTC | ETH | SOL |
+| | Address | QR |
 |---|---|---|
-| ![BTC](https://api.qrserver.com/v1/create-qr-code/?size=200&data=bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5) | ![ETH](https://api.qrserver.com/v1/create-qr-code/?size=200&data=0x581b4810873698505FDF3aAf0a39430bb0D7d655) | ![SOL](https://api.qrserver.com/v1/create-qr-code/?size=200&data=6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E) |
-| `bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5` | `0x581b4810873698505FDF3aAf0a39430bb0D7d655` | `6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E` |
+| <img src=".github/images/btc.svg" width="20"> **BTC** | `bc1qgyffnlhp2uz2uhpmhfrspc5qxpj3y9m4lwgga5` | <img src=".github/images/btc-qr.png" width="64"> |
+| <img src=".github/images/eth.svg" width="20"> **ETH** | `0x581b4810873698505FDF3aAf0a39430bb0D7d655` | <img src=".github/images/eth-qr.png" width="64"> |
+| <img src=".github/images/sol.svg" width="20"> **SOL** | `6awadeXmfc7JUMQL5SEgZXDE4yaFDgWkPNRySLDDmh7E` | <img src=".github/images/sol-qr.png" width="64"> |
 
 </details>
 
