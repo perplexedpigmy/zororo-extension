@@ -106,7 +106,7 @@ If you find this app useful, consider supporting its development:
 
 ## Privacy
 
-Zororo runs entirely on ororo.tv. **No data is collected, no analytics, no third-party servers.** All settings, ratings, and download history are stored locally in your browser's `chrome.storage.local`.
+Zororo runs entirely on ororo.tv. **No data is collected, no analytics, no tracking.** All settings, ratings, and download history are stored locally in your browser's `chrome.storage.local`. The only external request beyond ororo.tv is to `api.qrserver.com` to render a QR code when the user clicks a crypto donation pill (triggered by explicit action only).
 
 ---
 

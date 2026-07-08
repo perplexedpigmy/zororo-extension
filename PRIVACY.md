@@ -21,22 +21,27 @@ All data is stored in your browser's `chrome.storage.local` and never leaves you
 
 ### Network requests
 
-The extension makes requests only to:
+The extension makes requests to:
 
 - **ororo.tv API** (`https://ororo.tv/api/v2/...`) — to fetch show data, episode lists, and download URLs. These requests include your session cookies so ororo.tv can authenticate you.
+- **QR code server** (`https://api.qrserver.com/`) — to render a QR code for a crypto donation address when the user clicks a crypto pill in the support modal. Only triggered by explicit user action. No personal data is sent; the wallet address is public blockchain information.
 - **Chrome downloads API** — to trigger file downloads, running entirely in your browser.
 
 ### What is NOT collected
 
 - No analytics, tracking, or telemetry
-- No third-party servers
 - No personal information (name, email, IP address)
 - No browsing history outside of ororo.tv
 - No crash reports or error logs are sent anywhere
 
 ## Third-Party Services
 
-The extension does not integrate any third-party services, SDKs, or analytics frameworks.
+The extension uses the following third-party services:
+
+- **QRServer** (`api.qrserver.com`) — renders QR code images for crypto donation addresses in the support overlay. No user tracking or analytics. The request is made only on explicit user click.
+- **Buy Me a Coffee** (`buymeacoffee.com`) — the "Support" button links to a Ko-fi page via a standard `<a>` navigation. No data is sent by the extension.
+
+No other third-party services, SDKs, analytics frameworks, or tracking are integrated.
 
 ## Data Sharing
 
