@@ -1,4 +1,3 @@
-const HOSTS = ["https://ororo.tv/*"];
 const WATCHED_KEY = "watched";
 let activeTab = "queue";
 
@@ -6,31 +5,9 @@ function starsHTML(rating) {
   return "\u2605".repeat(rating) + "\u2606".repeat(5 - rating);
 }
 
-async function checkPermission() {
-  return new Promise((resolve) => {
-    chrome.permissions.contains({ origins: HOSTS }, resolve);
-  });
-}
-
-async function requestPermission() {
-  return new Promise((resolve) => {
-    chrome.permissions.request({ origins: HOSTS }, resolve);
-  });
-}
-
 async function init() {
-  const permLoading = document.getElementById("permission-loading");
-  const permRequired = document.getElementById("permission-required");
   const tabQueue = document.getElementById("tab-queue");
   const tabWatched = document.getElementById("tab-watched");
-
-  const granted = await checkPermission();
-  permLoading.style.display = "none";
-
-  if (!granted) {
-    permRequired.style.display = "block";
-    return;
-  }
 
   document.querySelectorAll(".tabs button").forEach((btn) => {
     btn.onclick = () => {
@@ -47,25 +24,6 @@ async function init() {
   render();
   setInterval(render, 2000);
 }
-
-document.getElementById("grant-permission").onclick = async () => {
-  const btn = document.getElementById("grant-permission");
-  btn.disabled = true;
-  btn.textContent = "Requesting...";
-  const granted = await requestPermission();
-  if (granted) {
-    document.getElementById("permission-required").style.display = "none";
-    document.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach((t) => t.classList.remove("active"));
-    document.querySelector('[data-tab="queue"]').classList.add("active");
-    document.getElementById("tab-queue").classList.add("active");
-    render();
-    setInterval(render, 2000);
-  } else {
-    btn.disabled = false;
-    btn.textContent = "Grant Access";
-  }
-};
 
 function createItemElement(item) {
   const seasonStr = "s" + String(item.season).padStart(2, "0");

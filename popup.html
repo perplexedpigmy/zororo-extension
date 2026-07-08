@@ -92,8 +92,6 @@
     .btn-open { background: #2d2d4e; color: #ccc; }
     .btn-primary { background: #6c5ce7; color: #fff; }
     .summary { font-size: 11px; color: #666; margin-bottom: 8px; }
-    .perm-prompt { text-align: center; padding: 16px 8px; }
-    .perm-prompt p { color: #999; font-size: 12px; line-height: 1.5; margin: 8px 0 16px; }
     .watched-item .del-btn {
       background: none;
       border: none;
@@ -112,14 +110,6 @@
   <div class="tabs" id="tabs">
     <button class="active" data-tab="queue">Queue</button>
     <button data-tab="watched">Rated</button>
-  </div>
-
-  <div id="permission-loading" class="perm-prompt">
-    <p>Checking permissions...</p>
-  </div>
-  <div id="permission-required" class="perm-prompt" style="display:none">
-    <p>This extension needs access to <strong>ororo.tv</strong> to load show data and download episodes.</p>
-    <button class="btn-primary" id="grant-permission">Grant Access</button>
   </div>
 
   <div id="tab-queue" class="tab-content">
