@@ -474,3 +474,16 @@
   color: #fff;
   background: #333;
 }
+
+/* ====== COMMENT TRANSLATION ====== */
+
+.ororo-tt-link {
+  margin-left: 8px;
+  font-size: 11px;
+  color: #6c5ce7;
+  cursor: pointer;
+  text-decoration: none;
+}
+.ororo-tt-link:hover {
+  color: #a29bfe;
+}
