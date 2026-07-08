@@ -16,8 +16,12 @@
   let posterUrl = null;
 
   async function loadWatched() {
-    const data = await chrome.storage.local.get(WATCHED_KEY);
-    return data[WATCHED_KEY] || [];
+    try {
+      const data = await chrome.storage.local.get(WATCHED_KEY);
+      return data[WATCHED_KEY] || [];
+    } catch {
+      return [];
+    }
   }
 
   async function saveWatchedItem(item) {
@@ -28,13 +32,17 @@
     } else {
       watched.push(item);
     }
-    await chrome.storage.local.set({ [WATCHED_KEY]: watched });
+    try {
+      await chrome.storage.local.set({ [WATCHED_KEY]: watched });
+    } catch {}
   }
 
   async function removeWatchedItem(id) {
     const watched = await loadWatched();
     const filtered = watched.filter((w) => w.id !== id);
-    await chrome.storage.local.set({ [WATCHED_KEY]: filtered });
+    try {
+      await chrome.storage.local.set({ [WATCHED_KEY]: filtered });
+    } catch {}
   }
 
   // ====== STAR DROPDOWN INJECTION ======
@@ -214,7 +222,11 @@
 
   async function getConfig() {
     const defaults = { rootDir: "OroroTV" };
-    return new Promise((r) => chrome.storage.sync.get(defaults, r));
+    try {
+      return await new Promise((r) => chrome.storage.sync.get(defaults, r));
+    } catch {
+      return defaults;
+    }
   }
 
   function tryGetPoster() {
@@ -1099,25 +1111,33 @@
 
       goBtn.textContent = t("checking");
 
-      chrome.runtime.sendMessage(
-        { type: "start-download", showName: showName, episodes: resolved },
-        (resp) => {
-          if (chrome.runtime.lastError) {
-            errorEl.textContent = t("extensionError");
-            errorEl.classList.add("visible");
-          } else if (resp.queued === 0) {
-            statusBar.textContent = t("allDownloaded");
-            statusBar.classList.add("visible");
-          } else {
-            const parts = [t("queued", { count: resp.queued })];
-            if (resp.skipped > 0) parts.push(t("skipped", { count: resp.skipped }));
-            statusBar.textContent = parts.join(" ");
-            statusBar.classList.add("visible");
+      try {
+        chrome.runtime.sendMessage(
+          { type: "start-download", showName: showName, episodes: resolved },
+          (resp) => {
+            if (chrome.runtime.lastError) {
+              errorEl.textContent = t("extensionError");
+              errorEl.classList.add("visible");
+            } else if (resp.queued === 0) {
+              statusBar.textContent = t("allDownloaded");
+              statusBar.classList.add("visible");
+            } else {
+              const parts = [t("queued", { count: resp.queued })];
+              if (resp.skipped > 0) parts.push(t("skipped", { count: resp.skipped }));
+              statusBar.textContent = parts.join(" ");
+              statusBar.classList.add("visible");
+            }
+            goBtn.disabled = false;
+            goBtn.textContent = t("download");
           }
-          goBtn.disabled = false;
-    goBtn.textContent = t("download");
-        }
-      );
+        );
+      } catch {
+        errorEl.textContent = t("extensionError");
+        errorEl.classList.add("visible");
+        goBtn.disabled = false;
+        goBtn.textContent = t("download");
+        statusBar.classList.remove("visible");
+      }
     };
   }
 
