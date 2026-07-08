@@ -1158,6 +1158,72 @@
     };
   }
 
+  // ====== COMMENT TRANSLATION ======
+
+  const translateCache = new Map();
+
+  function isNonEnglish(text) {
+    return /[\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0600-\u06FF\u0E00-\u0E7F\u00C0-\u00FF\u0100-\u017F]{3,}/.test(text);
+  }
+
+  async function translateText(text, targetLang) {
+    const key = text + "|" + targetLang;
+    if (translateCache.has(key)) return translateCache.get(key);
+    const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + targetLang + "&dt=t&q=" + encodeURIComponent(text.slice(0, 500));
+    try {
+      const resp = await fetch(url);
+      const data = await resp.json();
+      const result = data[0].map((s) => s[0]).join("");
+      translateCache.set(key, result);
+      return result;
+    } catch {
+      return text;
+    }
+  }
+
+  function processComment(commentEl, targetLang) {
+    const textDiv = commentEl.querySelector(".text-content");
+    const footer = commentEl.querySelector(".footer");
+    if (!textDiv || !footer || textDiv.dataset.ttProcessed) return;
+    textDiv.dataset.ttProcessed = "1";
+    const text = textDiv.textContent.trim();
+    if (!text || !isNonEnglish(text)) return;
+
+    const link = document.createElement("a");
+    link.href = "#";
+    link.className = "ororo-tt-link";
+    link.textContent = "Translate";
+    link.dataset.originalText = text;
+
+    link.onclick = async (e) => {
+      e.preventDefault();
+      if (link.dataset.state === "translated") {
+        textDiv.textContent = link.dataset.originalText;
+        link.textContent = "Translate";
+        link.dataset.state = "";
+        return;
+      }
+      const translated = await translateText(text, targetLang);
+      if (translated !== text) {
+        textDiv.textContent = translated;
+        link.textContent = "Original";
+        link.dataset.state = "translated";
+      }
+    };
+
+    footer.insertBefore(link, footer.lastElementChild);
+  }
+
+  function initCommentTranslation() {
+    const targetLang = getLangPrefix();
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll(".comment.top-lvl, .comment.nested").forEach((el) => processComment(el, targetLang));
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.querySelectorAll(".comment.top-lvl, .comment.nested").forEach((el) => processComment(el, targetLang));
+  }
+
   // Always inject into star dropdown
   initDropdownInjection();
+  initCommentTranslation();
 })();
