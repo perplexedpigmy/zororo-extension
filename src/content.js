@@ -469,6 +469,8 @@
       back: "Back",
       donateHead: "Enjoying Zororo? Your support keeps it alive ❤️",
       loading: "Loading...",
+      translate: "Translate",
+      original: "Original",
     },
     fr: {
       rate: "Noter",
@@ -503,6 +505,8 @@
       back: "Retour",
       donateHead: "Vous aimez Zororo ? Votre soutien le maintient en vie ❤️",
       loading: "Chargement...",
+      translate: "Traduire",
+      original: "Original",
     },
     de: {
       rate: "Bewerten",
@@ -537,6 +541,8 @@
       back: "Zurück",
       donateHead: "Gefällt dir Zororo? Deine Unterstützung hält es am Leben ❤️",
       loading: "Laden...",
+      translate: "Übersetzen",
+      original: "Original",
     },
     es: {
       rate: "Puntuar",
@@ -571,6 +577,8 @@
       back: "Volver",
       donateHead: "¿Disfrutas Zororo? Tu apoyo lo mantiene vivo ❤️",
       loading: "Cargando...",
+      translate: "Traducir",
+      original: "Original",
     },
     pt: {
       rate: "Avaliar",
@@ -605,6 +613,8 @@
       back: "Voltar",
       donateHead: "Está gostando do Zororo? Seu apoio o mantém vivo ❤️",
       loading: "Carregando...",
+      translate: "Traduzir",
+      original: "Original",
     },
     ru: {
       rate: "Оценить",
@@ -639,6 +649,8 @@
       back: "Назад",
       donateHead: "Нравится Zororo? Ваша поддержка поддерживает его ❤️",
       loading: "Загрузка...",
+      translate: "Перевести",
+      original: "Оригинал",
     },
     it: {
       rate: "Vota",
@@ -673,6 +685,8 @@
       back: "Indietro",
       donateHead: "Ti piace Zororo? Il tuo supporto lo mantiene vivo ❤️",
       loading: "Caricamento...",
+      translate: "Traduci",
+      original: "Originale",
     },
     pl: {
       rate: "Oceń",
@@ -707,6 +721,8 @@
       back: "Wstecz",
       donateHead: "Podoba Ci się Zororo? Twoje wsparcie utrzymuje je przy życiu ❤️",
       loading: "Ładowanie...",
+      translate: "Tłumacz",
+      original: "Oryginał",
     },
     tr: {
       rate: "Puanla",
@@ -741,6 +757,8 @@
       back: "Geri",
       donateHead: "Zororo'yu beğendin mi? Desteğin onu hayatta tutuyor ❤️",
       loading: "Yükleniyor...",
+      translate: "Çevir",
+      original: "Orijinal",
     },
   };
 
@@ -1176,10 +1194,6 @@
 
   const translateCache = new Map();
 
-  function isNonEnglish(text) {
-    return /[\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0600-\u06FF\u0E00-\u0E7F\u00C0-\u00FF\u0100-\u017F]{3,}/.test(text);
-  }
-
   async function translateText(text, targetLang) {
     const key = text + "|" + targetLang;
     if (translateCache.has(key)) return translateCache.get(key);
@@ -1201,26 +1215,26 @@
     if (!textDiv || !footer || textDiv.dataset.ttProcessed) return;
     textDiv.dataset.ttProcessed = "1";
     const text = textDiv.textContent.trim();
-    if (!text || !isNonEnglish(text)) return;
+    if (!text) return;
 
     const link = document.createElement("a");
     link.href = "#";
     link.className = "ororo-tt-link";
-    link.textContent = "Translate";
+    link.textContent = t("translate");
     link.dataset.originalText = text;
 
     link.onclick = async (e) => {
       e.preventDefault();
       if (link.dataset.state === "translated") {
         textDiv.textContent = link.dataset.originalText;
-        link.textContent = "Translate";
+        link.textContent = t("translate");
         link.dataset.state = "";
         return;
       }
       const translated = await translateText(text, targetLang);
       if (translated !== text) {
         textDiv.textContent = translated;
-        link.textContent = "Original";
+        link.textContent = t("original");
         link.dataset.state = "translated";
       }
     };

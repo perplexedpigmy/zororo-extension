@@ -57,7 +57,7 @@ Right-click the extension icon → **Options** (or `about:addons` → Zororo →
 
 | Setting | Description |
 |---|---|
-| **Root directory** | Base folder for all downloads (e.g. `Zororo/`). |
+| **Root directory** | Base folder for all downloads (e.g. `OroroTV/`). |
 | **Subtitle languages** | Comma-separated language codes to download (e.g. `en, fr, de`). |
 | **Default subtitle** | The language that gets the bare filename (no language suffix). |
 
