@@ -815,7 +815,21 @@
 
     document.body.appendChild(panel);
 
-    closeBtn.onclick = () => panel.remove();
+    const collapseIcon = document.createElement("img");
+    collapseIcon.className = "ororo-collapse-icon";
+    collapseIcon.src = chrome.runtime.getURL("icons/icon128.png");
+    collapseIcon.alt = "Zororo";
+    panel.appendChild(collapseIcon);
+
+    closeBtn.onclick = (e) => {
+      e.stopPropagation();
+      panel.classList.toggle("collapsed");
+    };
+    panel.onclick = (e) => {
+      if (panel.classList.contains("collapsed")) {
+        panel.classList.remove("collapsed");
+      }
+    };
 
     buildDonateModal();
     donateBtn.onclick = () => {

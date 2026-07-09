@@ -475,6 +475,42 @@
   background: #333;
 }
 
+/* ====== COLLAPSE / MINIMIZE ====== */
+
+#ororo-dl-panel.collapsed {
+  width: 144px;
+  height: 144px;
+  min-height: 144px;
+  top: 80px;
+  left: auto;
+  right: 16px;
+  padding: 0;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+#ororo-dl-panel.collapsed > * {
+  display: none !important;
+}
+
+.ororo-collapse-icon {
+  display: none;
+  width: 128px;
+  height: 128px;
+}
+#ororo-dl-panel.collapsed .ororo-collapse-icon {
+  display: block !important;
+}
+
+#ororo-dl-panel:not(.collapsed) {
+  transition: all 0.25s ease;
+}
+
 /* ====== COMMENT TRANSLATION ====== */
 
 .ororo-tt-link {
