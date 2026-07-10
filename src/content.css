@@ -523,3 +523,28 @@
 .ororo-tt-link:hover {
   color: #a29bfe;
 }
+
+/* ====== FEEDBACK FORM ====== */
+
+.ororo-feedback-input,
+.ororo-feedback-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  background: #0f0f1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.ororo-feedback-input:focus,
+.ororo-feedback-textarea:focus {
+  outline: none;
+  border-color: #6c5ce7;
+}
+.ororo-feedback-textarea {
+  resize: vertical;
+  min-height: 80px;
+}

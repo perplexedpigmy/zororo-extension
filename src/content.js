@@ -348,6 +348,80 @@
 
     crypto.appendChild(grid);
     modal.appendChild(crypto);
+
+    const feedbackBtn = document.createElement("button");
+    feedbackBtn.className = "donate-back";
+    feedbackBtn.textContent = "💬 " + t("feedback");
+    feedbackBtn.style.cssText = "margin-top:16px;width:100%;padding:8px;background:#2d2d4e;color:#ccc;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;";
+    feedbackBtn.onclick = () => showFeedbackForm(modal);
+    modal.appendChild(feedbackBtn);
+  }
+
+  function showFeedbackForm(modal) {
+    modal.replaceChildren();
+
+    const backBtn = document.createElement("button");
+    backBtn.className = "donate-back";
+    backBtn.textContent = "← " + t("back");
+    backBtn.onclick = buildDonateModal;
+    modal.appendChild(backBtn);
+
+    const heading = document.createElement("h3");
+    heading.className = "donate-heading";
+    heading.textContent = "💬 " + t("feedback");
+    modal.appendChild(heading);
+
+    const titleInput = document.createElement("input");
+    titleInput.type = "text";
+    titleInput.className = "ororo-feedback-input";
+    titleInput.placeholder = t("feedbackTitle");
+    modal.appendChild(titleInput);
+
+    const descTextarea = document.createElement("textarea");
+    descTextarea.className = "ororo-feedback-textarea";
+    descTextarea.placeholder = t("feedbackDesc");
+    descTextarea.rows = 5;
+    modal.appendChild(descTextarea);
+
+    const statusMsg = document.createElement("div");
+    statusMsg.className = "status-bar";
+    modal.appendChild(statusMsg);
+
+    const submitBtn = document.createElement("button");
+    submitBtn.className = "btn-download";
+    submitBtn.textContent = "📧 " + t("feedbackSubmit");
+    submitBtn.onclick = async () => {
+      if (!titleInput.value.trim() || !descTextarea.value.trim()) {
+        statusMsg.textContent = t("feedbackRequired");
+        statusMsg.classList.add("visible");
+        return;
+      }
+      submitBtn.disabled = true;
+      statusMsg.textContent = t("loading");
+      statusMsg.classList.add("visible");
+      try {
+        const resp = await fetch("https://formspree.io/f/mqevrbko", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: titleInput.value,
+            description: descTextarea.value,
+            page: window.location.href,
+          }),
+        });
+        if (resp.ok) {
+          titleInput.value = "";
+          descTextarea.value = "";
+          statusMsg.textContent = "✅ " + t("feedbackSuccess");
+        } else {
+          statusMsg.textContent = "❌ " + t("feedbackFail");
+        }
+      } catch {
+        statusMsg.textContent = "❌ " + t("feedbackNetError");
+      }
+      submitBtn.disabled = false;
+    };
+    modal.appendChild(submitBtn);
   }
 
   function showCryptoOverlay(coin) {
@@ -471,6 +545,14 @@
       loading: "Loading...",
       translate: "Translate",
       original: "Original",
+      feedback: "Feature Request / Bug Report",
+      feedbackTitle: "Bug: ... / Feature: ...",
+      feedbackDesc: "Describe what happened or what you'd like to see...",
+      feedbackSubmit: "Submit",
+      feedbackSuccess: "Thanks! Submitted successfully.",
+      feedbackRequired: "Please fill in both fields.",
+      feedbackFail: "Submission failed. Try again or email directly.",
+      feedbackNetError: "Network error. Try again.",
     },
     fr: {
       rate: "Noter",
@@ -507,6 +589,14 @@
       loading: "Chargement...",
       translate: "Traduire",
       original: "Original",
+      feedback: "Signaler un bug / Suggérer",
+      feedbackTitle: "Bug: ... / Fonction: ...",
+      feedbackDesc: "Décrivez ce qui s'est passé ou ce que vous souhaiteriez voir...",
+      feedbackSubmit: "Envoyer",
+      feedbackSuccess: "Merci ! Envoyé avec succès.",
+      feedbackRequired: "Veuillez remplir les deux champs.",
+      feedbackFail: "Échec de l'envoi. Réessayez ou envoyez un email directement.",
+      feedbackNetError: "Erreur réseau. Réessayez.",
     },
     de: {
       rate: "Bewerten",
@@ -543,6 +633,14 @@
       loading: "Laden...",
       translate: "Übersetzen",
       original: "Original",
+      feedback: "Fehler melden / Funktion wünschen",
+      feedbackTitle: "Fehler: ... / Feature: ...",
+      feedbackDesc: "Beschreibe das Problem oder den gewünschten Feature...",
+      feedbackSubmit: "Senden",
+      feedbackSuccess: "Danke! Erfolgreich gesendet.",
+      feedbackRequired: "Bitte füllen Sie beide Felder aus.",
+      feedbackFail: "Senden fehlgeschlagen. Versuchen Sie es erneut oder senden Sie direkt eine E-Mail.",
+      feedbackNetError: "Netzwerkfehler. Versuchen Sie es erneut.",
     },
     es: {
       rate: "Puntuar",
@@ -579,6 +677,14 @@
       loading: "Cargando...",
       translate: "Traducir",
       original: "Original",
+      feedback: "Reportar error / Sugerir",
+      feedbackTitle: "Error: ... / Función: ...",
+      feedbackDesc: "Describe lo que pasó o lo que te gustaría ver...",
+      feedbackSubmit: "Enviar",
+      feedbackSuccess: "¡Gracias! Enviado con éxito.",
+      feedbackRequired: "Por favor, rellene ambos campos.",
+      feedbackFail: "Envío fallido. Intente de nuevo o envíe un correo directamente.",
+      feedbackNetError: "Error de red. Intente de nuevo.",
     },
     pt: {
       rate: "Avaliar",
@@ -615,6 +721,14 @@
       loading: "Carregando...",
       translate: "Traduzir",
       original: "Original",
+      feedback: "Reportar erro / Sugerir",
+      feedbackTitle: "Erro: ... / Recurso: ...",
+      feedbackDesc: "Descreva o que aconteceu ou o que gostaria de ver...",
+      feedbackSubmit: "Enviar",
+      feedbackSuccess: "Obrigado! Enviado com sucesso.",
+      feedbackRequired: "Por favor, preencha ambos os campos.",
+      feedbackFail: "Falha no envio. Tente novamente ou envie um email diretamente.",
+      feedbackNetError: "Erro de rede. Tente novamente.",
     },
     ru: {
       rate: "Оценить",
@@ -651,6 +765,14 @@
       loading: "Загрузка...",
       translate: "Перевести",
       original: "Оригинал",
+      feedback: "Сообщить об ошибке / Предложить",
+      feedbackTitle: "Ошибка: ... / Функция: ...",
+      feedbackDesc: "Опишите, что произошло или что вы хотели бы видеть...",
+      feedbackSubmit: "Отправить",
+      feedbackSuccess: "Спасибо! Отправлено успешно.",
+      feedbackRequired: "Пожалуйста, заполните оба поля.",
+      feedbackFail: "Отправка не удалась. Попробуйте снова или отправьте письмо напрямую.",
+      feedbackNetError: "Ошибка сети. Попробуйте снова.",
     },
     it: {
       rate: "Vota",
@@ -687,6 +809,14 @@
       loading: "Caricamento...",
       translate: "Traduci",
       original: "Originale",
+      feedback: "Segnala bug / Richiedi",
+      feedbackTitle: "Bug: ... / Funzione: ...",
+      feedbackDesc: "Descrivi cosa è successo o cosa vorresti vedere...",
+      feedbackSubmit: "Invia",
+      feedbackSuccess: "Grazie! Inviato con successo.",
+      feedbackRequired: "Per favore, compila entrambi i campi.",
+      feedbackFail: "Invio fallito. Riprova o invia un'email direttamente.",
+      feedbackNetError: "Errore di rete. Riprova.",
     },
     pl: {
       rate: "Oceń",
@@ -723,6 +853,14 @@
       loading: "Ładowanie...",
       translate: "Tłumacz",
       original: "Oryginał",
+      feedback: "Zgłoś błąd / Zaproponuj",
+      feedbackTitle: "Błąd: ... / Funkcja: ...",
+      feedbackDesc: "Opisz co się stało lub co chciałbyś zobaczyć...",
+      feedbackSubmit: "Wyślij",
+      feedbackSuccess: "Dziękujemy! Wysłano pomyślnie.",
+      feedbackRequired: "Proszę wypełnić oba pola.",
+      feedbackFail: "Wysyłanie nie powiodło się. Spróbuj ponownie lub wyślij email bezpośrednio.",
+      feedbackNetError: "Błąd sieci. Spróbuj ponownie.",
     },
     tr: {
       rate: "Puanla",
@@ -759,6 +897,14 @@
       loading: "Yükleniyor...",
       translate: "Çevir",
       original: "Orijinal",
+      feedback: "Hata bildir / Öner",
+      feedbackTitle: "Hata: ... / Özellik: ...",
+      feedbackDesc: "Ne olduğunu veya ne görmek istediğinizi açıklayın...",
+      feedbackSubmit: "Gönder",
+      feedbackSuccess: "Teşekkürler! Başarıyla gönderildi.",
+      feedbackRequired: "Lütfen her iki alanı da doldurun.",
+      feedbackFail: "Gönderim başarısız. Tekrar deneyin veya doğrudan e-posta gönderin.",
+      feedbackNetError: "Ağ hatası. Tekrar deneyin.",
     },
   };
 
