@@ -40,7 +40,7 @@ The extension uses the following third-party services:
 
 - **QRServer** (`api.qrserver.com`) — renders QR code images for crypto donation addresses in the support overlay. No user tracking or analytics. The request is made only on explicit user click.
 - **Buy Me a Coffee** (`buymeacoffee.com`) — the "Support" button links to a Ko-fi page via a standard `<a>` navigation. No data is sent by the extension.
-- **Google Translate** (`translate.googleapis.com`) — translates non-English comment text on ororo.tv when the user clicks "Translate". The comment text is sent to Google for translation. Only triggered by explicit user action. No personal data is transmitted.
+- **Google Translate** (`translate.googleapis.com`) — translates comment text on ororo.tv when the user clicks "Translate". The comment text is sent to Google for translation. Only triggered by explicit user action. No personal data is transmitted.
 - **Formspree** (`formspree.io`) — forwards feedback form submissions from the support modal to the developer's email. Only triggered by explicit user action. No personal data is transmitted beyond what the user voluntarily enters (title, description, page URL).
 
 No other third-party services, SDKs, analytics frameworks, or tracking are integrated.
