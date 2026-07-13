@@ -218,6 +218,50 @@
   overflow-y: auto;
 }
 
+/* ====== WATCHED TAB SORT CONTROLS ====== */
+
+.ororo-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.ororo-sort-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #555;
+  border-radius: 4px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+.ororo-sort-btn:hover {
+  color: #a29bfe;
+}
+.ororo-sort-btn.active {
+  color: #6c5ce7;
+}
+.ororo-sort-btn svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* ====== WATCHED TAB DEFERRED DELETION ====== */
+
+.ororo-watched-panel .movie-btn.restore {
+  display: none;
+}
+.ororo-watched-panel.editing .favorites-item.deleted .movie-btn.restore {
+  display: inline-block !important;
+}
+.ororo-watched-panel.editing .favorites-item.deleted .movie-btn.remove {
+  display: none !important;
+}
+
 /* ====== DONATE SECTION ====== */
 
 #ororo-dl-panel .donate-btn {

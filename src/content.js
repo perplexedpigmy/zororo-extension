@@ -14,6 +14,28 @@
   let episodes = [];
   let seasons = [];
   let posterUrl = null;
+  const pendingDeletions = new Set();
+  const sortState = { mode: "date", ascending: false };
+
+  async function loadSortState() {
+    const data = await chrome.storage.local.get({ watchedSortMode: "date", watchedSortAsc: false });
+    sortState.mode = data.watchedSortMode;
+    sortState.ascending = data.watchedSortAsc;
+  }
+
+  async function saveSortState() {
+    await chrome.storage.local.set({ watchedSortMode: sortState.mode, watchedSortAsc: sortState.ascending });
+  }
+
+  function sortItems(items) {
+    const sorted = [...items];
+    sorted.sort((a, b) => {
+      if (sortState.mode === "rating") return (a.rating || 0) - (b.rating || 0);
+      return new Date(a.dateWatched) - new Date(b.dateWatched);
+    });
+    if (!sortState.ascending) sorted.reverse();
+    return sorted;
+  }
 
   async function loadWatched() {
     try {
@@ -101,10 +123,18 @@
     editLink.className = "js-fav-edit";
     editLink.href = "#";
     editLink.textContent = t("edit");
-    editLink.onclick = (e) => {
+    editLink.onclick = async (e) => {
       e.preventDefault();
+      const wasEditing = panel.classList.contains("editing");
+      if (wasEditing && pendingDeletions.size > 0) {
+        for (const id of pendingDeletions) {
+          await removeWatchedItem(id);
+        }
+        pendingDeletions.clear();
+      }
       panel.classList.toggle("editing");
       editLink.textContent = panel.classList.contains("editing") ? t("done") : t("edit");
+      if (wasEditing) renderWatchedDropdown(panel);
     };
     markArea.appendChild(editLink);
     foot.appendChild(removeArea);
@@ -130,6 +160,7 @@
   }
 
   async function renderWatchedDropdown(panel) {
+    await loadSortState();
     const watched = await loadWatched();
     const list = panel.querySelector(".favorites-list");
     list.replaceChildren();
@@ -142,13 +173,15 @@
       p.textContent = t("ratedEmpty");
       note.appendChild(p);
       list.appendChild(note);
+      updateSortControls(panel, false);
       return;
     }
 
-    const sorted = watched.slice().reverse();
+    const sorted = sortItems(watched);
     for (const item of sorted) {
+      const isPending = pendingDeletions.has(item.id);
       const div = document.createElement("div");
-      div.className = "favorites-item movie";
+      div.className = "favorites-item movie" + (isPending ? " deleted" : "");
 
       // Poster / icon
       const iconDiv = document.createElement("div");
@@ -189,7 +222,7 @@
       info.appendChild(desc);
       div.appendChild(info);
 
-      // Type badge + Remove button
+      // Type badge + Remove + Restore buttons
       const other = document.createElement("div");
       other.className = "movie-other";
       const badge = document.createElement("span");
@@ -205,13 +238,68 @@
       delBtn.style.display = "none";
       delBtn.onclick = (e) => {
         e.preventDefault();
-        removeWatchedItem(item.id).then(() => renderWatchedDropdown(panel));
+        pendingDeletions.add(item.id);
+        renderWatchedDropdown(panel);
       };
       other.appendChild(delBtn);
+
+      const restoreBtn = document.createElement("a");
+      restoreBtn.className = "movie-btn restore";
+      restoreBtn.href = "#";
+      restoreBtn.textContent = t("restore");
+      restoreBtn.style.display = "none";
+      restoreBtn.onclick = (e) => {
+        e.preventDefault();
+        pendingDeletions.delete(item.id);
+        renderWatchedDropdown(panel);
+      };
+      other.appendChild(restoreBtn);
 
       div.appendChild(other);
       list.appendChild(div);
     }
+
+    updateSortControls(panel, true);
+  }
+
+  function updateSortControls(panel, hasItems) {
+    let sortArea = panel.querySelector(".ororo-sort-controls");
+    if (!sortArea) {
+      sortArea = document.createElement("div");
+      sortArea.className = "ororo-sort-controls";
+      const foot = panel.querySelector(".favorites-foot");
+      if (foot) foot.insertBefore(sortArea, foot.querySelector(".favorites-mark"));
+    }
+    sortArea.replaceChildren();
+    if (!hasItems) return;
+
+    const starSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>';
+    const clockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    const arrowUpSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>';
+    const arrowDownSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>';
+
+    function makeBtn(html, active) {
+      const btn = document.createElement("button");
+      btn.className = "ororo-sort-btn" + (active ? " active" : "");
+      btn.type = "button";
+      btn.innerHTML = html;
+      return btn;
+    }
+
+    const starBtn = makeBtn(starSvg, sortState.mode === "rating");
+    starBtn.title = "Sort by rating";
+    starBtn.onclick = () => { sortState.mode = "rating"; saveSortState(); renderWatchedDropdown(panel); };
+    sortArea.appendChild(starBtn);
+
+    const clockBtn = makeBtn(clockSvg, sortState.mode === "date");
+    clockBtn.title = "Sort by date";
+    clockBtn.onclick = () => { sortState.mode = "date"; saveSortState(); renderWatchedDropdown(panel); };
+    sortArea.appendChild(clockBtn);
+
+    const arrowBtn = makeBtn(sortState.ascending ? arrowUpSvg : arrowDownSvg, true);
+    arrowBtn.title = sortState.ascending ? "Ascending" : "Descending";
+    arrowBtn.onclick = () => { sortState.ascending = !sortState.ascending; saveSortState(); renderWatchedDropdown(panel); };
+    sortArea.appendChild(arrowBtn);
   }
 
   // ====== PANEL UI (show/movie pages only) ======
@@ -566,6 +654,7 @@
       feedbackRequired: "Please fill in both fields.",
       feedbackFail: "Submission failed. Try again or email directly.",
       feedbackNetError: "Network error. Try again.",
+      restore: "Restore",
     },
     fr: {
       rate: "Noter",
@@ -610,6 +699,7 @@
       feedbackRequired: "Veuillez remplir les deux champs.",
       feedbackFail: "Échec de l'envoi. Réessayez ou envoyez un email directement.",
       feedbackNetError: "Erreur réseau. Réessayez.",
+      restore: "Restaurer",
     },
     de: {
       rate: "Bewerten",
@@ -654,6 +744,7 @@
       feedbackRequired: "Bitte füllen Sie beide Felder aus.",
       feedbackFail: "Senden fehlgeschlagen. Versuchen Sie es erneut oder senden Sie direkt eine E-Mail.",
       feedbackNetError: "Netzwerkfehler. Versuchen Sie es erneut.",
+      restore: "Wiederherstellen",
     },
     es: {
       rate: "Puntuar",
@@ -698,6 +789,7 @@
       feedbackRequired: "Por favor, rellene ambos campos.",
       feedbackFail: "Envío fallido. Intente de nuevo o envíe un correo directamente.",
       feedbackNetError: "Error de red. Intente de nuevo.",
+      restore: "Restaurar",
     },
     pt: {
       rate: "Avaliar",
@@ -742,6 +834,7 @@
       feedbackRequired: "Por favor, preencha ambos os campos.",
       feedbackFail: "Falha no envio. Tente novamente ou envie um email diretamente.",
       feedbackNetError: "Erro de rede. Tente novamente.",
+      restore: "Restaurar",
     },
     ru: {
       rate: "Оценить",
@@ -786,6 +879,7 @@
       feedbackRequired: "Пожалуйста, заполните оба поля.",
       feedbackFail: "Отправка не удалась. Попробуйте снова или отправьте письмо напрямую.",
       feedbackNetError: "Ошибка сети. Попробуйте снова.",
+      restore: "Восстановить",
     },
     it: {
       rate: "Vota",
@@ -830,6 +924,7 @@
       feedbackRequired: "Per favore, compila entrambi i campi.",
       feedbackFail: "Invio fallito. Riprova o invia un'email direttamente.",
       feedbackNetError: "Errore di rete. Riprova.",
+      restore: "Ripristina",
     },
     pl: {
       rate: "Oceń",
@@ -874,6 +969,7 @@
       feedbackRequired: "Proszę wypełnić oba pola.",
       feedbackFail: "Wysyłanie nie powiodło się. Spróbuj ponownie lub wyślij email bezpośrednio.",
       feedbackNetError: "Błąd sieci. Spróbuj ponownie.",
+      restore: "Przywróć",
     },
     tr: {
       rate: "Puanla",
@@ -918,6 +1014,7 @@
       feedbackRequired: "Lütfen her iki alanı da doldurun.",
       feedbackFail: "Gönderim başarısız. Tekrar deneyin veya doğrudan e-posta gönderin.",
       feedbackNetError: "Ağ hatası. Tekrar deneyin.",
+      restore: "Geri Yükle",
     },
   };
 
