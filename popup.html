@@ -89,9 +89,16 @@
     }
     .actions button:hover { opacity: 0.85; }
     .btn-cancel { background: #d63031; color: #fff; }
+    .btn-clean { background: #2d2d4e; color: #888; }
     .btn-open { background: #2d2d4e; color: #ccc; }
     .btn-primary { background: #6c5ce7; color: #fff; }
-    .summary { font-size: 11px; color: #666; margin-bottom: 8px; }
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .summary { font-size: 11px; color: #666; margin-bottom: 0; }
     .watched-item .del-btn {
       background: none;
       border: none;
@@ -104,6 +111,14 @@
     }
     .watched-item .del-btn:hover { color: #ff6b6b; }
     .watched-date { font-size: 10px; color: #555; margin-top: 2px; }
+    .watched-link {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+    }
   </style>
 </head>
 <body>
@@ -113,7 +128,10 @@
   </div>
 
   <div id="tab-queue" class="tab-content">
-    <div id="summary" class="summary"></div>
+    <div class="summary-row">
+      <div id="summary" class="summary"></div>
+      <button class="btn-clean" id="clean-all" style="display:none">Clean All</button>
+    </div>
     <div id="list"></div>
     <div class="actions">
       <button class="btn-cancel" id="cancel-all" style="display:none">Cancel Queued</button>

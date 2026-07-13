@@ -4,13 +4,44 @@ const STORAGE_KEY = "queue";
 let queue = [];
 let activeCount = 0;
 let processing = false;
+let nextId = 1;
 
 async function loadQueue() {
   const data = await chrome.storage.local.get(STORAGE_KEY);
   queue = data[STORAGE_KEY] || [];
+  nextId = queue.reduce((max, e) => Math.max(max, (e.id || 0) + 1), 1);
+
+  const stalled = queue.filter((e) => e.status === "downloading");
+  if (stalled.length > 0) {
+    const downloads = await chrome.downloads.search({});
+    for (const item of stalled) {
+      if (item.downloadId == null) {
+        item.status = "failed";
+        item.error = "interrupted";
+      } else {
+        const dl = downloads.find((d) => d.id === item.downloadId);
+        if (!dl) {
+          item.status = "failed";
+          item.error = "lost";
+        } else if (dl.state === "complete") {
+          item.status = "completed";
+        } else if (dl.state === "interrupted") {
+          item.status = dl.error === "USER_CANCELED" ? "cancelled" : "failed";
+          item.error = dl.error;
+        }
+      }
+    }
+  }
+}
+
+function trimQueue() {
+  if (queue.length > 100) {
+    queue = [...queue].sort((a, b) => b.id - a.id).slice(0, 100);
+  }
 }
 
 async function saveQueue() {
+  trimQueue();
   await chrome.storage.local.set({ [STORAGE_KEY]: queue });
 }
 
@@ -44,7 +75,16 @@ async function processNext() {
 
     processItem(item).finally(() => {
       activeCount--;
-      saveQueue().then(broadcast);
+      const match = queue.find((e) => e.id === item.id);
+      if (match) {
+        match.downloadId = item.downloadId;
+        match.status = item.status;
+        match.error = item.error;
+      }
+      saveQueue().then(() => {
+        broadcast();
+        processNext();
+      });
     });
   }
 
@@ -57,12 +97,14 @@ async function processItem(item) {
     const base = `${config.rootDir}/${safePath(item.showName)}/s${String(item.season).padStart(2, "0")}`;
     const epFile = `${base}/${String(item.episodeNum).padStart(2, "0")}.${safePath(item.episodeName || "Episode")}`;
 
-    await chrome.downloads.download({
+    const downloadId = await chrome.downloads.download({
       url: item.downloadUrl,
       filename: `${epFile}.mp4`,
       conflictAction: "uniquify",
       saveAs: false,
     });
+    item.downloadId = downloadId;
+    item.status = "downloading";
 
     const wantedLangs = config.subtitleLangs || ["en"];
     const defaultLang = config.defaultSubLang || wantedLangs[0];
@@ -79,13 +121,13 @@ async function processItem(item) {
         // subtitle failure is non-fatal
       }
     }
-
-    item.status = "completed";
   } catch (err) {
     item.status = "failed";
     item.error = err.message;
   }
 }
+
+loadQueue();
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   switch (msg.type) {
@@ -125,6 +167,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           );
           if (!exists) {
             queue.push({
+              id: nextId++,
               showName: msg.showName,
               season: ep.season,
               episodeNum: ep.number,
@@ -146,7 +189,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "get-queue":
-      loadQueue().then(() => sendResponse({ queue }));
+      if (queue.length === 0) {
+        loadQueue().then(() => sendResponse({ queue }));
+      } else {
+        sendResponse({ queue });
+      }
       return true;
 
     case "cancel-all":
@@ -156,11 +203,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       saveQueue().then(broadcast);
       sendResponse({ ok: true });
       break;
+
+    case "clean-all":
+      queue = [];
+      saveQueue().then(broadcast);
+      sendResponse({ ok: true });
+      break;
   }
 });
 
-chrome.downloads.onChanged.addListener(() => {
-  processNext();
+chrome.downloads.onChanged.addListener((delta) => {
+  if (!delta.state) return;
+  const item = queue.find((e) => e.downloadId === delta.id);
+  if (!item) return;
+  if (delta.state.current === "complete") {
+    item.status = "completed";
+  } else if (delta.state.current === "interrupted") {
+    item.status = delta.error?.current === "USER_CANCELED" ? "cancelled" : "failed";
+    item.error = delta.error?.current;
+  } else {
+    return;
+  }
+  saveQueue().then(broadcast);
 });
 
 chrome.alarms.create("queue-watch", { periodInMinutes: 2 });

@@ -61,6 +61,7 @@ async function render() {
   const listEl = document.getElementById("list");
   const summaryEl = document.getElementById("summary");
   const cancelBtn = document.getElementById("cancel-all");
+  const cleanBtn = document.getElementById("clean-all");
 
   listEl.replaceChildren();
 
@@ -73,6 +74,7 @@ async function render() {
     listEl.appendChild(empty);
     summaryEl.textContent = "";
     cancelBtn.style.display = "none";
+    cleanBtn.style.display = "none";
     return;
   }
 
@@ -84,9 +86,17 @@ async function render() {
     " downloading \u00b7 " + counts.queued + " queued \u00b7 " + counts.failed + " failed";
 
   cancelBtn.style.display = counts.queued > 0 ? "block" : "none";
+  cleanBtn.style.display = counts.completed + counts.failed + counts.cancelled > 0 ? "block" : "none";
+
+  const statusOrder = { downloading: 0, queued: 1, completed: 2, cancelled: 3, failed: 4 };
+  const items = [...queue].sort((a, b) => {
+    const sa = statusOrder[a.status] ?? 99;
+    const sb = statusOrder[b.status] ?? 99;
+    if (sa !== sb) return sa - sb;
+    return a.id - b.id;
+  });
 
   const fragment = document.createDocumentFragment();
-  const items = queue.slice().reverse().slice(0, 50);
   for (const item of items) {
     fragment.appendChild(createItemElement(item));
   }
@@ -138,6 +148,15 @@ async function renderWatched() {
     stars.className = "stars";
     stars.textContent = starsHTML(item.rating || 0);
 
+    const link = document.createElement("a");
+    link.className = "watched-link";
+    link.href = "https://ororo.tv" + (item.url || "/en/" + item.type + "s/" + (item.slug || ""));
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.appendChild(badge);
+    link.appendChild(info);
+    link.appendChild(stars);
+
     const delBtn = document.createElement("button");
     delBtn.className = "del-btn";
     delBtn.textContent = "\u2715";
@@ -148,9 +167,7 @@ async function renderWatched() {
       renderWatched();
     };
 
-    div.appendChild(badge);
-    div.appendChild(info);
-    div.appendChild(stars);
+    div.appendChild(link);
     div.appendChild(delBtn);
     fragment.appendChild(div);
   }
@@ -160,6 +177,11 @@ async function renderWatched() {
 
 document.getElementById("cancel-all").onclick = async () => {
   await chrome.runtime.sendMessage({ type: "cancel-all" });
+  render();
+};
+
+document.getElementById("clean-all").onclick = async () => {
+  await chrome.runtime.sendMessage({ type: "clean-all" });
   render();
 };
 
