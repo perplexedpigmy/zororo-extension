@@ -567,6 +567,12 @@
 .ororo-tt-link:hover {
   color: #a29bfe;
 }
+.episode-plot .ororo-tt-link,
+.show-content__description + .ororo-tt-link {
+  margin-left: 0;
+  margin-top: 4px;
+  display: inline-block;
+}
 
 /* ====== FEEDBACK FORM ====== */
 

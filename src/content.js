@@ -1507,7 +1507,127 @@
     document.querySelectorAll(".comment.top-lvl, .comment.nested").forEach((el) => processComment(el, targetLang));
   }
 
+  // ====== EXTENDED TRANSLATION (description + episode plot) ======
+
+  function processShowDescription(descEl, targetLang) {
+    if (descEl.dataset.ttProcessed) return;
+    const desc = descEl.textContent.trim();
+    if (!desc) return;
+
+    const titleEl = document.querySelector("h1.show-content__title, .show-content__title h1, h1");
+    const title = titleEl ? titleEl.textContent.trim() : "";
+    const combined = title ? title + ".\n\n" + desc : desc;
+
+    descEl.dataset.ttProcessed = "1";
+    const link = document.createElement("a");
+    link.href = "#";
+    link.className = "ororo-tt-link";
+    link.textContent = t("translate");
+    link.dataset.originalDesc = desc;
+    link.dataset.originalTitle = title;
+
+    link.onclick = async (e) => {
+      e.preventDefault();
+      if (link.dataset.state === "translated") {
+        descEl.textContent = link.dataset.originalDesc;
+        if (titleEl) titleEl.textContent = link.dataset.originalTitle;
+        link.textContent = t("translate");
+        link.dataset.state = "";
+        return;
+      }
+      const translated = await translateText(combined, targetLang);
+      if (translated !== combined) {
+        let descPart = translated;
+        let titlePart = "";
+        for (const sep of [".\n\n", "\n\n", "\n"]) {
+          const idx = translated.indexOf(sep);
+          if (idx > 0) {
+            titlePart = translated.slice(0, idx);
+            descPart = translated.slice(idx + sep.length);
+            break;
+          }
+        }
+        if (titlePart && titleEl) titleEl.textContent = titlePart;
+        descEl.textContent = descPart;
+        link.textContent = t("original");
+        link.dataset.state = "translated";
+      }
+    };
+
+    descEl.parentNode.insertBefore(link, descEl.nextSibling);
+  }
+
+  function processEpisodePlot(plotTextEl, targetLang) {
+    if (plotTextEl.dataset.ttProcessed) return;
+    const desc = plotTextEl.textContent.trim();
+    if (!desc) return;
+
+    const row = plotTextEl.closest(".show-content__episode-row");
+    const titleEl = row ? row.querySelector(".show-content__episode-link") : null;
+    const title = titleEl ? titleEl.textContent.trim() : "";
+    const combined = title ? title + ".\n\n" + desc : desc;
+
+    plotTextEl.dataset.ttProcessed = "1";
+    const link = document.createElement("a");
+    link.href = "#";
+    link.className = "ororo-tt-link";
+    link.textContent = t("translate");
+    link.dataset.originalDesc = desc;
+    link.dataset.originalTitle = title;
+
+    link.onclick = async (e) => {
+      e.preventDefault();
+      if (link.dataset.state === "translated") {
+        plotTextEl.textContent = link.dataset.originalDesc;
+        if (titleEl) titleEl.textContent = link.dataset.originalTitle;
+        link.textContent = t("translate");
+        link.dataset.state = "";
+        return;
+      }
+      const translated = await translateText(combined, targetLang);
+      if (translated !== combined) {
+        let descPart = translated;
+        let titlePart = "";
+        for (const sep of [".\n\n", "\n\n", "\n"]) {
+          const idx = translated.indexOf(sep);
+          if (idx > 0) {
+            titlePart = translated.slice(0, idx);
+            descPart = translated.slice(idx + sep.length);
+            break;
+          }
+        }
+        if (titlePart && titleEl) titleEl.textContent = titlePart;
+        plotTextEl.textContent = descPart;
+        link.textContent = t("original");
+        link.dataset.state = "translated";
+      }
+    };
+
+    const plotEl = plotTextEl.closest(".episode-plot");
+    if (plotEl) {
+      plotEl.insertBefore(link, plotTextEl.nextSibling);
+    } else {
+      plotTextEl.parentNode.insertBefore(link, plotTextEl.nextSibling);
+    }
+  }
+
+  function initExtendedTranslation() {
+    const targetLang = getLangPrefix();
+
+    const descEl = document.querySelector("div.show-content__description");
+    if (descEl) processShowDescription(descEl, targetLang);
+
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll(".episode-plot__text:not([data-tt-processed])").forEach((el) => processEpisodePlot(el, targetLang));
+      const newDesc = document.querySelector("div.show-content__description:not([data-tt-processed])");
+      if (newDesc) processShowDescription(newDesc, targetLang);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.querySelectorAll(".episode-plot__text:not([data-tt-processed])").forEach((el) => processEpisodePlot(el, targetLang));
+  }
+
   // Always inject into star dropdown
   initDropdownInjection();
   initCommentTranslation();
+  initExtendedTranslation();
 })();
