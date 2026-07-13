@@ -1449,20 +1449,40 @@
   // ====== COMMENT TRANSLATION ======
 
   const translateCache = new Map();
+  let translateQueue = Promise.resolve();
 
   async function translateText(text, targetLang) {
     const key = text + "|" + targetLang;
     if (translateCache.has(key)) return translateCache.get(key);
     const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + targetLang + "&dt=t&q=" + encodeURIComponent(text.slice(0, 500));
+    const prev = translateQueue;
+    let release;
+    translateQueue = new Promise((r) => release = r);
+    await prev;
     try {
+      await new Promise((r) => setTimeout(r, 500));
       const resp = await fetch(url);
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
       const data = await resp.json();
       const result = data[0].map((s) => s[0]).join("");
       translateCache.set(key, result);
       return result;
     } catch {
-      return text;
+      return null;
+    } finally {
+      release();
     }
+  }
+
+  function flashFailure(link) {
+    const origText = link.textContent;
+    const origColor = link.style.color;
+    link.textContent = "✗";
+    link.style.color = "#ff6b6b";
+    setTimeout(() => {
+      link.textContent = origText;
+      link.style.color = origColor;
+    }, 3000);
   }
 
   function processComment(commentEl, targetLang) {
@@ -1488,6 +1508,10 @@
         return;
       }
       const translated = await translateText(text, targetLang);
+      if (translated === null) {
+        flashFailure(link);
+        return;
+      }
       if (translated !== text) {
         textDiv.textContent = translated;
         link.textContent = t("original");
@@ -1536,6 +1560,10 @@
         return;
       }
       const translated = await translateText(combined, targetLang);
+      if (translated === null) {
+        flashFailure(link);
+        return;
+      }
       if (translated !== combined) {
         let descPart = translated;
         let titlePart = "";
@@ -1585,6 +1613,10 @@
         return;
       }
       const translated = await translateText(combined, targetLang);
+      if (translated === null) {
+        flashFailure(link);
+        return;
+      }
       if (translated !== combined) {
         let descPart = translated;
         let titlePart = "";
