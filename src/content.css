@@ -223,7 +223,22 @@
 .ororo-sort-controls {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(108, 92, 231, 0.06);
+  border-radius: 6px;
+}
+.ororo-sort-label {
+  font-size: 11px;
+  color: #666;
+  margin-right: 4px;
+  font-weight: 600;
+}
+.ororo-sort-separator {
+  width: 1px;
+  height: 18px;
+  background: #333;
+  margin: 0 4px;
 }
 .ororo-sort-btn {
   background: none;

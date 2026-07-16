@@ -31,6 +31,7 @@
     const sorted = [...items];
     sorted.sort((a, b) => {
       if (sortState.mode === "rating") return (a.rating || 0) - (b.rating || 0);
+      if (sortState.mode === "alpha") return a.title.localeCompare(b.title);
       return new Date(a.dateWatched) - new Date(b.dateWatched);
     });
     if (!sortState.ascending) sorted.reverse();
@@ -56,7 +57,7 @@
     }
     try {
       await chrome.storage.local.set({ [WATCHED_KEY]: watched });
-    } catch {}
+    } catch { }
   }
 
   async function removeWatchedItem(id) {
@@ -64,7 +65,7 @@
     const filtered = watched.filter((w) => w.id !== id);
     try {
       await chrome.storage.local.set({ [WATCHED_KEY]: filtered });
-    } catch {}
+    } catch { }
   }
 
   // ====== STAR DROPDOWN INJECTION ======
@@ -273,32 +274,69 @@
     sortArea.replaceChildren();
     if (!hasItems) return;
 
-    const starSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>';
-    const clockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
-    const arrowUpSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>';
-    const arrowDownSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>';
+    const label = document.createElement("span");
+    label.className = "ororo-sort-label";
+    label.textContent = "Sort:";
+    sortArea.appendChild(label);
 
-    function makeBtn(html, active) {
+    function makeSvgBtn(tag, attrs, children, active) {
       const btn = document.createElement("button");
       btn.className = "ororo-sort-btn" + (active ? " active" : "");
       btn.type = "button";
-      btn.innerHTML = html;
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      for (const [k, v] of Object.entries(attrs)) svg.setAttribute(k, v);
+      for (const c of children) {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", c.t);
+        for (const [k, v] of Object.entries(c.a)) el.setAttribute(k, v);
+        if (c.text) el.textContent = c.text;
+        svg.appendChild(el);
+      }
+      btn.appendChild(svg);
       return btn;
     }
 
-    const starBtn = makeBtn(starSvg, sortState.mode === "rating");
-    starBtn.title = "Sort by rating";
-    starBtn.onclick = () => { sortState.mode = "rating"; saveSortState(); renderWatchedDropdown(panel); };
+    function btn(title, desc, active, onclick) {
+      const b = makeSvgBtn("svg", desc.a, desc.c, active);
+      b.title = title;
+      b.onclick = onclick;
+      return b;
+    }
+
+    const starDesc = {
+      a: { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linejoin": "round" },
+      c: [{ t: "polygon", a: { points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" } }]
+    };
+    const clockDesc = {
+      a: { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" },
+      c: [{ t: "circle", a: { cx: "12", cy: "12", r: "10" } }, { t: "polyline", a: { points: "12 6 12 12 16 14" } }]
+    };
+    const arrowUpDesc = {
+      a: { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" },
+      c: [{ t: "line", a: { x1: "12", y1: "19", x2: "12", y2: "5" } }, { t: "polyline", a: { points: "5 12 12 5 19 12" } }]
+    };
+    const arrowDownDesc = {
+      a: { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" },
+      c: [{ t: "line", a: { x1: "12", y1: "5", x2: "12", y2: "19" } }, { t: "polyline", a: { points: "19 12 12 19 5 12" } }]
+    };
+    const alphaDesc = {
+      a: { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "1.5" },
+      c: [{ t: "text", a: { x: "4", y: "18", "font-family": "sans-serif", "font-weight": "bold", "font-size": "14", fill: "currentColor" }, text: "A" }, { t: "text", a: { x: "14", y: "18", "font-family": "sans-serif", "font-weight": "bold", "font-size": "14", fill: "currentColor" }, text: "Z" }]
+    };
+
+    const starBtn = btn("Sort by rating", starDesc, sortState.mode === "rating", () => { sortState.mode = "rating"; saveSortState(); renderWatchedDropdown(panel); });
     sortArea.appendChild(starBtn);
 
-    const clockBtn = makeBtn(clockSvg, sortState.mode === "date");
-    clockBtn.title = "Sort by date";
-    clockBtn.onclick = () => { sortState.mode = "date"; saveSortState(); renderWatchedDropdown(panel); };
+    const clockBtn = btn("By date rated", clockDesc, sortState.mode === "date", () => { sortState.mode = "date"; saveSortState(); renderWatchedDropdown(panel); });
     sortArea.appendChild(clockBtn);
 
-    const arrowBtn = makeBtn(sortState.ascending ? arrowUpSvg : arrowDownSvg, true);
-    arrowBtn.title = sortState.ascending ? "Ascending" : "Descending";
-    arrowBtn.onclick = () => { sortState.ascending = !sortState.ascending; saveSortState(); renderWatchedDropdown(panel); };
+    const alphaBtn = btn("Sort alphabetically", alphaDesc, sortState.mode === "alpha", () => { sortState.mode = "alpha"; saveSortState(); renderWatchedDropdown(panel); });
+    sortArea.appendChild(alphaBtn);
+
+    const sep = document.createElement("div");
+    sep.className = "ororo-sort-separator";
+    sortArea.appendChild(sep);
+
+    const arrowBtn = btn(sortState.ascending ? "Ascending" : "Descending", sortState.ascending ? arrowUpDesc : arrowDownDesc, true, () => { sortState.ascending = !sortState.ascending; saveSortState(); renderWatchedDropdown(panel); });
     sortArea.appendChild(arrowBtn);
   }
 
@@ -309,7 +347,12 @@
   }
 
   async function getConfig() {
-    const defaults = { rootDir: "OroroTV" };
+    const defaults = {
+      rootDir: "OroroTV",
+      translateComments: true,
+      translateDescription: true,
+      translateEpisodes: true,
+    };
     try {
       return await new Promise((r) => chrome.storage.sync.get(defaults, r));
     } catch {
@@ -578,7 +621,7 @@
           addrText.classList.remove("copied");
           copyIcon.textContent = "📋";
         }, 2000);
-      }).catch(() => {});
+      }).catch(() => { });
     }
 
     addrText.onclick = copyAddr;
@@ -1091,7 +1134,7 @@
 
     const collapseIcon = document.createElement("img");
     collapseIcon.className = "ororo-collapse-icon";
-    collapseIcon.src = chrome.runtime.getURL("icons/icon128.png");
+    collapseIcon.src = chrome.runtime.getURL("icons/zoro.png");
     collapseIcon.alt = "Zororo";
     panel.appendChild(collapseIcon);
 
@@ -1392,7 +1435,7 @@
         errorEl.textContent = t("resolveFailed");
         errorEl.classList.add("visible");
         goBtn.disabled = false;
-          goBtn.textContent = t("download");
+        goBtn.textContent = t("download");
         statusBar.classList.remove("visible");
         return;
       }
@@ -1643,23 +1686,30 @@
     }
   }
 
-  function initExtendedTranslation() {
+  function initExtendedTranslation(cfg) {
     const targetLang = getLangPrefix();
 
-    const descEl = document.querySelector("div.show-content__description");
-    if (descEl) processShowDescription(descEl, targetLang);
+    if (cfg.translateDescription) {
+      const descEl = document.querySelector("div.show-content__description");
+      if (descEl) processShowDescription(descEl, targetLang);
+    }
 
-    const observer = new MutationObserver(() => {
+    if (cfg.translateEpisodes) {
+      const observer = new MutationObserver(() => {
+        document.querySelectorAll(".episode-plot__text:not([data-tt-processed])").forEach((el) => processEpisodePlot(el, targetLang));
+        if (cfg.translateDescription) {
+          const newDesc = document.querySelector("div.show-content__description:not([data-tt-processed])");
+          if (newDesc) processShowDescription(newDesc, targetLang);
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
       document.querySelectorAll(".episode-plot__text:not([data-tt-processed])").forEach((el) => processEpisodePlot(el, targetLang));
-      const newDesc = document.querySelector("div.show-content__description:not([data-tt-processed])");
-      if (newDesc) processShowDescription(newDesc, targetLang);
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    document.querySelectorAll(".episode-plot__text:not([data-tt-processed])").forEach((el) => processEpisodePlot(el, targetLang));
+    }
   }
 
-  // Always inject into star dropdown
   initDropdownInjection();
-  initCommentTranslation();
-  initExtendedTranslation();
+  getConfig().then((cfg) => {
+    if (cfg.translateComments) initCommentTranslation();
+    if (cfg.translateDescription || cfg.translateEpisodes) initExtendedTranslation(cfg);
+  });
 })();

@@ -4,6 +4,9 @@ const DEFAULTS = {
   rootDir: "OroroTV",
   subtitleLangs: ["en"],
   defaultSubLang: "en",
+  translateComments: true,
+  translateDescription: true,
+  translateEpisodes: true,
 };
 
 async function load() {
@@ -18,6 +21,10 @@ async function load() {
     cb.onchange = updateDefaultLangSelect;
   });
   updateDefaultLangSelect(config.defaultSubLang);
+
+  document.getElementById("translateComments").checked = config.translateComments;
+  document.getElementById("translateDescription").checked = config.translateDescription;
+  document.getElementById("translateEpisodes").checked = config.translateEpisodes;
 }
 
 function updateDefaultLangSelect(selected) {
@@ -46,7 +53,11 @@ async function save() {
   ).map((cb) => cb.value);
   const defaultSubLang = document.getElementById("defaultSubLang").value || subtitleLangs[0] || "";
 
-  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang });
+  const translateComments = document.getElementById("translateComments").checked;
+  const translateDescription = document.getElementById("translateDescription").checked;
+  const translateEpisodes = document.getElementById("translateEpisodes").checked;
+
+  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang, translateComments, translateDescription, translateEpisodes });
 
   const status = document.getElementById("status");
   status.textContent = "Saved.";

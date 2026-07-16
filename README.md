@@ -1,9 +1,9 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="icons/icon128.png">
-  <img alt="Zororo" src="icons/icon128.png" width="128" align="left">
+  <img alt="Zororo" src="icons/icon48.png" width="128" align="left">
 </picture>
 
-# Zororo
+# ororo
 
 **One-click downloader for [ororo.tv](https://ororo.tv) shows and movies.**
 
@@ -11,7 +11,7 @@ Automatically organizes episodes by season, skips already-downloaded files, lets
 you rate your watched content, comment translation, and supports 9 languages.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.4.0-blue)](https://github.com/perplexedpigmy/zororo-extension)
+[![Version](https://img.shields.io/badge/version-1.5.0-blue)](https://github.com/perplexedpigmy/zororo-extension)
 [![Firefox](https://img.shields.io/badge/firefox-addon-orange)](https://addons.mozilla.org/en-US/firefox/addon/zororo/)
 [![Chrome](https://img.shields.io/badge/chrome-web__store-4285F4)](https://chromewebstore.google.com/detail/zororo/ibcmhfcmkmllpimlpplbmopfjollmecf)
 
@@ -31,9 +31,7 @@ you rate your watched content, comment translation, and supports 9 languages.
   Auto-saves instantly (no save button).
 - **Subtitle selection** — Choose which languages to download; default language
   gets a bare `.srt`, others get `.<lang>.srt`.
-- **Comment translation** — Translate any comment to your UI language
-  via Google Translate. Click the localized "Translate" link on any
-  comment, toggle back to "Original".
+- **Translation (optional)** — Translate comments, show descriptions, and episode plots to your UI language. Each can be disabled in Options.
 - **Minimizable panel** — Click × to collapse the panel to a small icon in the
   top-right corner; click it to restore.
 - **In-app feedback** — Submit bug reports and feature requests directly from
@@ -74,8 +72,7 @@ you rate your watched content, comment translation, and supports 9 languages.
    - **Minimize** — click × to collapse the panel to an icon; click it to
      restore.
 3. Files are saved to your configured root directory.
-4. **Translate comments** — click the localized "Translate" link below any
-   comment to see a machine translation in your UI language.
+4. **Translate** — click "Translate" on any comment, description, or episode plot.
 5. **Submit feedback** — open the support modal (heart icon), then click
    "Feature Request / Bug Report".
 
@@ -91,6 +88,9 @@ Preferences on Firefox).
 | **Root directory**     | Base folder for all downloads (e.g. `OroroTV/`).                |
 | **Subtitle languages** | Comma-separated language codes to download (e.g. `en, fr, de`). |
 | **Default subtitle**   | The language that gets the bare filename (no language suffix).  |
+| **Translate comments** | Show Translate links on comments.                               |
+| **Translate description** | Show Translate link on show/movie description.              |
+| **Translate episodes** | Show Translate link on episode plot text.                       |
 
 You can also **export / import your rated list** as JSON from the options page.
 
