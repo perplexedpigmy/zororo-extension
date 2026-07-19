@@ -1,5 +1,6 @@
 (() => {
   const WATCHED_KEY = "watched";
+const PANEL_STATE_KEY = "zororoPanelState";
 
   const path = window.location.pathname;
   const showMatch = path.match(/\/[a-z]{2}\/shows\/(.+)/);
@@ -1082,6 +1083,8 @@
 
     const panel = document.createElement("div");
     panel.id = "ororo-dl-panel";
+    const { [PANEL_STATE_KEY]: savedState } = await chrome.storage.local.get(PANEL_STATE_KEY);
+    if (savedState === "collapsed") panel.classList.add("collapsed");
 
     const closeBtn = document.createElement("button");
     closeBtn.className = "close-btn";
@@ -1141,10 +1144,12 @@
     closeBtn.onclick = (e) => {
       e.stopPropagation();
       panel.classList.toggle("collapsed");
+      chrome.storage.local.set({ [PANEL_STATE_KEY]: panel.classList.contains("collapsed") ? "collapsed" : "expanded" });
     };
     panel.onclick = (e) => {
       if (panel.classList.contains("collapsed")) {
         panel.classList.remove("collapsed");
+        chrome.storage.local.set({ [PANEL_STATE_KEY]: "expanded" });
       }
     };
 
