@@ -1134,6 +1134,16 @@ const PANEL_STATE_KEY = "zororoPanelState";
     panel.appendChild(donateBtn);
 
     document.body.appendChild(panel);
+    const overlay = document.getElementById("overlay");
+    if (overlay) {
+      const mo = new MutationObserver(() => {
+        panel.style.display = overlay.style.display !== "none" ? "none" : "";
+      });
+      mo.observe(overlay, { attributes: true, attributeFilter: ["style"] });
+      if (getComputedStyle(overlay).display !== "none") {
+        panel.style.display = "none";
+      }
+    }
 
     const collapseIcon = document.createElement("img");
     collapseIcon.className = "ororo-collapse-icon";
