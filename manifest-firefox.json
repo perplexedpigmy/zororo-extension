@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ororo",
-  "version": "1.6.0",
+  "version": "1.7.1",
   "description": "One-click downloader for ororo.tv shows and movies with auto-skip, subtitle selection, star ratings, and queue management.",
   "homepage_url": "https://github.com/perplexedpigmy/zororo-extension",
   "browser_specific_settings": {

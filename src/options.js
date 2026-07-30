@@ -7,6 +7,7 @@ const DEFAULTS = {
   translateComments: true,
   translateDescription: true,
   translateEpisodes: true,
+  closePanelOnClickOutside: true,
 };
 
 async function load() {
@@ -25,6 +26,7 @@ async function load() {
   document.getElementById("translateComments").checked = config.translateComments;
   document.getElementById("translateDescription").checked = config.translateDescription;
   document.getElementById("translateEpisodes").checked = config.translateEpisodes;
+  document.getElementById("closePanelOnClickOutside").checked = config.closePanelOnClickOutside;
 }
 
 function updateDefaultLangSelect(selected) {
@@ -56,8 +58,9 @@ async function save() {
   const translateComments = document.getElementById("translateComments").checked;
   const translateDescription = document.getElementById("translateDescription").checked;
   const translateEpisodes = document.getElementById("translateEpisodes").checked;
+  const closePanelOnClickOutside = document.getElementById("closePanelOnClickOutside").checked;
 
-  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang, translateComments, translateDescription, translateEpisodes });
+  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang, translateComments, translateDescription, translateEpisodes, closePanelOnClickOutside });
 
   const status = document.getElementById("status");
   status.textContent = "Saved.";

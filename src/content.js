@@ -1081,6 +1081,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
     const config = await getConfig();
     const lang = getLangPrefix();
 
+    const { closePanelOnClickOutside } = await chrome.storage.sync.get("closePanelOnClickOutside");
+
     const panel = document.createElement("div");
     panel.id = "ororo-dl-panel";
     const { [PANEL_STATE_KEY]: savedState } = await chrome.storage.local.get(PANEL_STATE_KEY);
@@ -1168,35 +1170,45 @@ const PANEL_STATE_KEY = "zororoPanelState";
       panel.classList.add("donate-open");
     };
 
-    function isActionableInPanel(el, root) {
-      while (el && el !== root) {
-        const tag = el.tagName;
-        if (tag === "A" || tag === "BUTTON" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "LABEL") {
-          return true;
+    if (closePanelOnClickOutside !== false) {
+      function isActionableInPanel(el, root) {
+        while (el && el !== root) {
+          const tag = el.tagName;
+          if (tag === "A" || tag === "BUTTON" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "LABEL") {
+            return true;
+          }
+          if (el.onclick || el.getAttribute("role") === "button" || el.hasAttribute("tabindex")) {
+            return true;
+          }
+          if (el.classList.contains("star") || el.classList.contains("ororo-dl-season-cb") ||
+              el.classList.contains("btn-download") || el.classList.contains("btn-select-all") ||
+              el.classList.contains("btn-deselect-all") || el.classList.contains("donate-btn") ||
+              el.classList.contains("close-btn") || el.classList.contains("ororo-collapse-icon") ||
+              el.classList.contains("crypto-card") || el.classList.contains("coin-circle") ||
+              el.classList.contains("donate-back") || el.classList.contains("ororo-tt-link")) {
+            return true;
+          }
+          el = el.parentElement;
         }
-        if (el.onclick || el.getAttribute("role") === "button" || el.hasAttribute("tabindex")) {
-          return true;
-        }
-        if (el.classList.contains("star") || el.classList.contains("ororo-dl-season-cb") ||
-            el.classList.contains("btn-download") || el.classList.contains("btn-select-all") ||
-            el.classList.contains("btn-deselect-all") || el.classList.contains("donate-btn") ||
-            el.classList.contains("close-btn") || el.classList.contains("ororo-collapse-icon") ||
-            el.classList.contains("crypto-card") || el.classList.contains("coin-circle") ||
-            el.classList.contains("donate-back") || el.classList.contains("ororo-tt-link")) {
-          return true;
-        }
-        el = el.parentElement;
+        return false;
       }
-      return false;
-    }
 
-    document.addEventListener("click", (e) => {
-      if (!panel || panel.classList.contains("collapsed")) return;
-      if (isActionableInPanel(e.target, panel)) return;
-      if (panel.contains(e.target)) return;
-      panel.classList.add("collapsed");
-      chrome.storage.local.set({ [PANEL_STATE_KEY]: "collapsed" });
-    }, true);
+      document.addEventListener("click", (e) => {
+        if (!panel || panel.classList.contains("collapsed")) return;
+        if (isActionableInPanel(e.target, panel)) return;
+        if (panel.contains(e.target)) return;
+        panel.classList.add("collapsed");
+        chrome.storage.local.set({ [PANEL_STATE_KEY]: "collapsed" });
+      }, true);
+
+      document.addEventListener("dblclick", (e) => {
+        if (!panel || !panel.classList.contains("collapsed")) return;
+        if (isActionableInPanel(e.target, panel)) return;
+        if (panel.contains(e.target)) return;
+        panel.classList.remove("collapsed");
+        chrome.storage.local.set({ [PANEL_STATE_KEY]: "expanded" });
+      }, true);
+    }
 
     if (isMovie) {
       await initMovie(titleEl, subEl, bodyEl, watchedEl, statusBar, errorEl);
