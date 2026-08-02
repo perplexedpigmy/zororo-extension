@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ororo",
-  "version": "1.7.0",
+  "version": "@VERSION@",
   "description": "One-click downloader for ororo.tv shows and movies with auto-skip, subtitle selection, star ratings, and queue management.",
   "permissions": [
     "storage",

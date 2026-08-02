@@ -3,3 +3,5 @@ extension/
 dist/
 tmp/
 dev-docs/
+.opencode/
+openspec/
