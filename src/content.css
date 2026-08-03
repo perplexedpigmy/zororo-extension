@@ -324,16 +324,16 @@
   flex: 1;
   padding: 8px;
   background: #2d2d4e;
-  color: #ccc;
-  border: 1px solid #333;
+  color: #ffdd00;
+  border: 1px solid rgba(255, 221, 0, 0.45);
   border-radius: 8px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, border-color 0.15s;
 }
 #ororo-dl-panel .review-btn:hover {
-  opacity: 0.85;
+  border-color: #ffdd00;
 }
 
 #ororo-dl-panel .ororo-review-nudge {
