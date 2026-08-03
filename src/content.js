@@ -1252,6 +1252,7 @@ const PANEL_STATE_KEY = "zororoPanelState";
       if (!posterUrl) posterUrl = tryGetPoster();
 
       episodes = showData.episodes || [];
+
       const seasonSet = new Set(episodes.map((e) => e.season));
       seasons = Array.from(seasonSet).sort((a, b) => a - b);
 
@@ -1385,6 +1386,18 @@ const PANEL_STATE_KEY = "zororoPanelState";
     watchedEl.appendChild(stars);
   }
 
+  function episodeYear(ep) {
+    if (!ep) return null;
+    for (const key of Object.keys(ep)) {
+      const v = ep[key];
+      if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}/.test(v)) {
+        const y = new Date(v).getFullYear();
+        if (!isNaN(y)) return y;
+      }
+    }
+    return null;
+  }
+
   function renderDownloadSection(bodyEl, titleEl, subEl, statusBar, errorEl) {
     const old = document.getElementById("ororo-dl-download");
     if (old) old.remove();
@@ -1440,7 +1453,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       cb.className = "ororo-dl-season-cb";
       cb.dataset.season = String(s);
       cb.checked = !incomplete;
+      const years = eps.map(episodeYear).filter((y) => y);
+      const year = years.length ? Math.min(...years) : null;
       const span = document.createElement("span");
+      span.className = "season-name";
       span.textContent = t("season", { n: s });
       const count = document.createElement("span");
       count.className = "season-count";
@@ -1448,6 +1464,12 @@ const PANEL_STATE_KEY = "zororoPanelState";
       const label = document.createElement("label");
       label.appendChild(cb);
       label.appendChild(span);
+      if (year) {
+        const yearSpan = document.createElement("span");
+        yearSpan.className = "season-year";
+        yearSpan.textContent = "" + year;
+        label.appendChild(yearSpan);
+      }
       label.appendChild(count);
       if (incomplete) {
         const badge = document.createElement("span");
