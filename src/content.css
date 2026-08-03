@@ -295,12 +295,17 @@
   display: none !important;
 }
 
-/* ====== DONATE SECTION ====== */
+/* ====== DONATE / REVIEW SECTION ====== */
+
+#ororo-dl-panel .panel-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
 
 #ororo-dl-panel .donate-btn {
   display: block;
-  width: 100%;
-  margin-top: 14px;
+  flex: 3;
   padding: 8px;
   background: linear-gradient(135deg, #6c5ce7, #a29bfe);
   color: #fff;
@@ -313,6 +318,61 @@
 }
 #ororo-dl-panel .donate-btn:hover {
   opacity: 0.85;
+}
+
+#ororo-dl-panel .review-btn {
+  flex: 1;
+  padding: 8px;
+  background: #2d2d4e;
+  color: #ccc;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+#ororo-dl-panel .review-btn:hover {
+  opacity: 0.85;
+}
+
+#ororo-dl-panel .ororo-review-nudge {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #0f0f1e;
+  border: 1px solid #333;
+  border-radius: 6px;
+}
+#ororo-dl-panel .ororo-review-nudge > span {
+  display: block;
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+#ororo-dl-panel .nudge-btns {
+  display: flex;
+  gap: 6px;
+}
+#ororo-dl-panel .nudge-btns button {
+  flex: 1;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+#ororo-dl-panel .nudge-btns button:hover {
+  opacity: 0.85;
+}
+#ororo-dl-panel .nudge-btns .rate {
+  background: #6c5ce7;
+  color: #fff;
+}
+#ororo-dl-panel .nudge-btns button:not(.rate) {
+  background: #2d2d4e;
+  color: #888;
 }
 
 /* ====== DONATE MODAL ====== */
@@ -328,7 +388,8 @@
 #ororo-dl-panel.donate-open #ororo-dl-body,
 #ororo-dl-panel.donate-open #ororo-dl-status,
 #ororo-dl-panel.donate-open #ororo-dl-error,
-#ororo-dl-panel.donate-open #ororo-dl-donate-btn {
+#ororo-dl-panel.donate-open #ororo-dl-donate-btn,
+#ororo-dl-panel.donate-open #ororo-dl-review-btn {
   display: none !important;
 }
 

@@ -1,6 +1,7 @@
 (() => {
   const WATCHED_KEY = "watched";
 const PANEL_STATE_KEY = "zororoPanelState";
+  const RATE_URL = "@RATE_URL@";
 
   const path = window.location.pathname;
   const showMatch = path.match(/\/[a-z]{2}\/shows\/(.+)/);
@@ -699,6 +700,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Submission failed. Try again or email directly.",
       feedbackNetError: "Network error. Try again.",
       restore: "Restore",
+      reviewUs: "Review us",
+      reviewPrompt: "Enjoying Zororo? A quick review helps a lot!",
+      reviewLater: "Later",
+      reviewNever: "Don't ask again",
     },
     fr: {
       rate: "Noter",
@@ -744,6 +749,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Échec de l'envoi. Réessayez ou envoyez un email directement.",
       feedbackNetError: "Erreur réseau. Réessayez.",
       restore: "Restaurer",
+      reviewUs: "Donnez votre avis",
+      reviewPrompt: "Vous aimez Zororo ? Un petit avis nous aide beaucoup !",
+      reviewLater: "Plus tard",
+      reviewNever: "Ne plus demander",
     },
     de: {
       rate: "Bewerten",
@@ -789,6 +798,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Senden fehlgeschlagen. Versuchen Sie es erneut oder senden Sie direkt eine E-Mail.",
       feedbackNetError: "Netzwerkfehler. Versuchen Sie es erneut.",
       restore: "Wiederherstellen",
+      reviewUs: "Bewerte uns",
+      reviewPrompt: "Gefällt dir Zororo? Eine schnelle Bewertung hilft sehr!",
+      reviewLater: "Später",
+      reviewNever: "Nicht mehr fragen",
     },
     es: {
       rate: "Puntuar",
@@ -834,6 +847,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Envío fallido. Intente de nuevo o envíe un correo directamente.",
       feedbackNetError: "Error de red. Intente de nuevo.",
       restore: "Restaurar",
+      reviewUs: "Valóranos",
+      reviewPrompt: "¿Te gusta Zororo? ¡Una reseña rápida ayuda mucho!",
+      reviewLater: "Más tarde",
+      reviewNever: "No volver a preguntar",
     },
     pt: {
       rate: "Avaliar",
@@ -879,6 +896,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Falha no envio. Tente novamente ou envie um email diretamente.",
       feedbackNetError: "Erro de rede. Tente novamente.",
       restore: "Restaurar",
+      reviewUs: "Avalie-nos",
+      reviewPrompt: "Gosta do Zororo? Uma avaliação rápida ajuda muito!",
+      reviewLater: "Mais tarde",
+      reviewNever: "Não perguntar de novo",
     },
     ru: {
       rate: "Оценить",
@@ -924,6 +945,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Отправка не удалась. Попробуйте снова или отправьте письмо напрямую.",
       feedbackNetError: "Ошибка сети. Попробуйте снова.",
       restore: "Восстановить",
+      reviewUs: "Оставьте отзыв",
+      reviewPrompt: "Нравится Zororo? Быстрый отзыв очень поможет!",
+      reviewLater: "Позже",
+      reviewNever: "Больше не спрашивать",
     },
     it: {
       rate: "Vota",
@@ -969,6 +994,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Invio fallito. Riprova o invia un'email direttamente.",
       feedbackNetError: "Errore di rete. Riprova.",
       restore: "Ripristina",
+      reviewUs: "Lascia una recensione",
+      reviewPrompt: "Ti piace Zororo? Una recensione veloce aiuta molto!",
+      reviewLater: "Più tardi",
+      reviewNever: "Non chiedere più",
     },
     pl: {
       rate: "Oceń",
@@ -1014,6 +1043,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Wysyłanie nie powiodło się. Spróbuj ponownie lub wyślij email bezpośrednio.",
       feedbackNetError: "Błąd sieci. Spróbuj ponownie.",
       restore: "Przywróć",
+      reviewUs: "Zostaw opinię",
+      reviewPrompt: "Podoba Ci się Zororo? Krótka opinia bardzo pomaga!",
+      reviewLater: "Później",
+      reviewNever: "Nie pytaj więcej",
     },
     tr: {
       rate: "Puanla",
@@ -1059,6 +1092,10 @@ const PANEL_STATE_KEY = "zororoPanelState";
       feedbackFail: "Gönderim başarısız. Tekrar deneyin veya doğrudan e-posta gönderin.",
       feedbackNetError: "Ağ hatası. Tekrar deneyin.",
       restore: "Geri Yükle",
+      reviewUs: "Bizi değerlendirin",
+      reviewPrompt: "Zororo'yu beğendin mi? Kısa bir yorum çok yardımcı olur!",
+      reviewLater: "Sonra",
+      reviewNever: "Tekrar sorma",
     },
   };
 
@@ -1133,11 +1170,26 @@ const PANEL_STATE_KEY = "zororoPanelState";
     donateModal.className = "donate-modal";
     panel.appendChild(donateModal);
 
+    const panelFooter = document.createElement("div");
+    panelFooter.className = "panel-footer";
+
     const donateBtn = document.createElement("button");
     donateBtn.id = "ororo-dl-donate-btn";
     donateBtn.className = "donate-btn";
     donateBtn.textContent = "❤️ " + t("support");
-    panel.appendChild(donateBtn);
+    panelFooter.appendChild(donateBtn);
+
+    const reviewBtn = document.createElement("button");
+    reviewBtn.id = "ororo-dl-review-btn";
+    reviewBtn.className = "review-btn";
+    reviewBtn.textContent = "★ " + t("reviewUs");
+    reviewBtn.onclick = () => {
+      chrome.storage.local.set({ zororoRated: true });
+      window.open(RATE_URL, "_blank");
+    };
+    panelFooter.appendChild(reviewBtn);
+
+    panel.appendChild(panelFooter);
 
     document.body.appendChild(panel);
     const overlay = document.getElementById("overlay");
@@ -1398,6 +1450,51 @@ const PANEL_STATE_KEY = "zororoPanelState";
     return null;
   }
 
+  async function recordSuccessfulDownload(statusBar) {
+    const data = await chrome.storage.local.get({ zororoRated: false, zororoDownloadCount: 0 });
+    const count = data.zororoDownloadCount + 1;
+    await chrome.storage.local.set({ zororoDownloadCount: count });
+    if (data.zororoRated || count < 3) return;
+
+    const nudge = document.createElement("div");
+    nudge.className = "ororo-review-nudge";
+    const msg = document.createElement("span");
+    msg.textContent = t("reviewPrompt");
+    nudge.appendChild(msg);
+
+    const btns = document.createElement("div");
+    btns.className = "nudge-btns";
+
+    const rateBtn = document.createElement("button");
+    rateBtn.className = "nudge-btn rate";
+    rateBtn.textContent = "★ " + t("reviewUs");
+    rateBtn.onclick = () => {
+      chrome.storage.local.set({ zororoRated: true });
+      window.open(RATE_URL, "_blank");
+      nudge.remove();
+    };
+    const laterBtn = document.createElement("button");
+    laterBtn.className = "nudge-btn";
+    laterBtn.textContent = t("reviewLater");
+    laterBtn.onclick = () => {
+      chrome.storage.local.set({ zororoDownloadCount: 0 });
+      nudge.remove();
+    };
+    const neverBtn = document.createElement("button");
+    neverBtn.className = "nudge-btn";
+    neverBtn.textContent = t("reviewNever");
+    neverBtn.onclick = () => {
+      chrome.storage.local.set({ zororoRated: true });
+      nudge.remove();
+    };
+
+    btns.appendChild(rateBtn);
+    btns.appendChild(laterBtn);
+    btns.appendChild(neverBtn);
+    nudge.appendChild(btns);
+    statusBar.appendChild(nudge);
+  }
+
   function renderDownloadSection(bodyEl, titleEl, subEl, statusBar, errorEl) {
     const old = document.getElementById("ororo-dl-download");
     if (old) old.remove();
@@ -1544,6 +1641,7 @@ const PANEL_STATE_KEY = "zororoPanelState";
               if (resp.skipped > 0) parts.push(t("skipped", { count: resp.skipped }));
               statusBar.textContent = parts.join(" ");
               statusBar.classList.add("visible");
+              recordSuccessfulDownload(statusBar);
             }
             goBtn.disabled = false;
             goBtn.textContent = t("download");
