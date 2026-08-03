@@ -663,7 +663,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "No rated items yet. Rate a show or movie to see it here.",
       download: "Download Selected",
       selectAll: "Select All",
-      clear: "Clear",
+      deselectAll: "Deselect All",
+      invert: "Invert",
       season: "Season {n}",
       ofFormat: "{released} of {total} ep.",
       missing: "{count} missing",
@@ -712,7 +713,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Aucun élément noté. Notez un film ou une série pour le voir ici.",
       download: "Télécharger la sélection",
       selectAll: "Tout sélectionner",
-      clear: "Effacer",
+      deselectAll: "Tout décocher",
+      invert: "Inverser",
       season: "Saison {n}",
       ofFormat: "{released} sur {total} ép.",
       missing: "{count} manquant(s)",
@@ -761,7 +763,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Noch keine Bewertungen. Bewerten Sie eine Serie oder einen Film, um sie hier zu sehen.",
       download: "Auswahl herunterladen",
       selectAll: "Alle auswählen",
-      clear: "Leeren",
+      deselectAll: "Alle abwählen",
+      invert: "Invertieren",
       season: "Staffel {n}",
       ofFormat: "{released} von {total} Ep.",
       missing: "{count} fehlen",
@@ -810,7 +813,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Aún no hay elementos puntuados. Puntúe una serie o película para verla aquí.",
       download: "Descargar selección",
       selectAll: "Seleccionar todo",
-      clear: "Limpiar",
+      deselectAll: "Desmarcar todo",
+      invert: "Invertir",
       season: "Temporada {n}",
       ofFormat: "{released} de {total} ep.",
       missing: "{count} faltan",
@@ -859,7 +863,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Nenhum item avaliado ainda. Avalie uma série ou filme para vê-lo aqui.",
       download: "Baixar seleção",
       selectAll: "Selecionar tudo",
-      clear: "Limpar",
+      deselectAll: "Desmarcar tudo",
+      invert: "Inverter",
       season: "Temporada {n}",
       ofFormat: "{released} de {total} ep.",
       missing: "{count} faltando",
@@ -908,7 +913,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Нет оценённых элементов. Оцените шоу или фильм, чтобы увидеть его здесь.",
       download: "Скачать выбранное",
       selectAll: "Выбрать всё",
-      clear: "Очистить",
+      deselectAll: "Снять всё",
+      invert: "Инвертировать",
       season: "Сезон {n}",
       ofFormat: "{released} из {total} эп.",
       missing: "{count} отсутствует",
@@ -957,7 +963,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Ancora nessun elemento votato. Vota una serie o un film per vederlo qui.",
       download: "Scarica selezione",
       selectAll: "Seleziona tutto",
-      clear: "Cancella",
+      deselectAll: "Togli selezione",
+      invert: "Inverti",
       season: "Stagione {n}",
       ofFormat: "{released} di {total} ep.",
       missing: "{count} mancanti",
@@ -1006,7 +1013,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Brak ocenionych pozycji. Oceń serial lub film, aby zobaczyć go tutaj.",
       download: "Pobierz wybrane",
       selectAll: "Zaznacz wszystko",
-      clear: "Wyczyść",
+      deselectAll: "Odznacz wszystko",
+      invert: "Odwróć",
       season: "Sezon {n}",
       ofFormat: "{released} z {total} odc.",
       missing: "{count} brakuje",
@@ -1055,7 +1063,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       ratedEmpty: "Henüz puanlanmış öğe yok. Bir dizi veya filmi puanlamak için buraya tıklayın.",
       download: "Seçimi İndir",
       selectAll: "Tümünü seç",
-      clear: "Temizle",
+      deselectAll: "Seçimi kaldır",
+      invert: "Tersine çevir",
       season: "Sezon {n}",
       ofFormat: "{released} / {total} bl.",
       missing: "{count} eksik",
@@ -1238,7 +1247,7 @@ const PANEL_STATE_KEY = "zororoPanelState";
           }
           if (el.classList.contains("star") || el.classList.contains("ororo-dl-season-cb") ||
               el.classList.contains("btn-download") || el.classList.contains("btn-select-all") ||
-              el.classList.contains("btn-deselect-all") || el.classList.contains("donate-btn") ||
+              el.classList.contains("btn-invert") || el.classList.contains("donate-btn") ||
               el.classList.contains("close-btn") || el.classList.contains("ororo-collapse-icon") ||
               el.classList.contains("crypto-card") || el.classList.contains("coin-circle") ||
               el.classList.contains("donate-back") || el.classList.contains("ororo-tt-link")) {
@@ -1520,14 +1529,18 @@ const PANEL_STATE_KEY = "zororoPanelState";
     const selBtn = document.createElement("button");
     selBtn.className = "btn-select-all";
     selBtn.id = "ororo-dl-select-all";
-    selBtn.textContent = t("selectAll");
-    const deselBtn = document.createElement("button");
-    deselBtn.className = "btn-deselect-all";
-    deselBtn.id = "ororo-dl-deselect-all";
-    deselBtn.textContent = t("clear");
+    const invertBtn = document.createElement("button");
+    invertBtn.className = "btn-invert";
+    invertBtn.id = "ororo-dl-invert";
+    invertBtn.textContent = t("invert");
     actions2.appendChild(selBtn);
-    actions2.appendChild(deselBtn);
+    actions2.appendChild(invertBtn);
     wrap.appendChild(actions2);
+
+    const updateSelectToggle = () => {
+      const anySelected = document.querySelectorAll(".ororo-dl-season-cb:checked").length > 0;
+      selBtn.textContent = anySelected ? t("deselectAll") : t("selectAll");
+    };
 
     bodyEl.appendChild(wrap);
 
@@ -1550,6 +1563,7 @@ const PANEL_STATE_KEY = "zororoPanelState";
       cb.className = "ororo-dl-season-cb";
       cb.dataset.season = String(s);
       cb.checked = !incomplete;
+      cb.addEventListener("change", updateSelectToggle);
       const years = eps.map(episodeYear).filter((y) => y);
       const year = years.length ? Math.min(...years) : null;
       const span = document.createElement("span");
@@ -1581,11 +1595,16 @@ const PANEL_STATE_KEY = "zororoPanelState";
       seasonsEl.appendChild(div);
     }
 
+    updateSelectToggle();
+
     selBtn.onclick = () => {
-      document.querySelectorAll(".ororo-dl-season-cb").forEach((c) => (c.checked = true));
+      const anySelected = document.querySelectorAll(".ororo-dl-season-cb:checked").length > 0;
+      document.querySelectorAll(".ororo-dl-season-cb").forEach((c) => (c.checked = !anySelected));
+      updateSelectToggle();
     };
-    deselBtn.onclick = () => {
-      document.querySelectorAll(".ororo-dl-season-cb").forEach((c) => (c.checked = false));
+    invertBtn.onclick = () => {
+      document.querySelectorAll(".ororo-dl-season-cb").forEach((c) => (c.checked = !c.checked));
+      updateSelectToggle();
     };
 
     goBtn.onclick = async () => {

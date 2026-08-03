@@ -137,14 +137,11 @@
   cursor: not-allowed;
 }
 
-#ororo-dl-panel .btn-select-all {
+#ororo-dl-panel .btn-select-all,
+#ororo-dl-panel .btn-invert {
   background: #2d2d4e;
   color: #ccc;
-}
-
-#ororo-dl-panel .btn-deselect-all {
-  background: #2d2d4e;
-  color: #ccc;
+  font-size: 12px;
 }
 
 #ororo-dl-panel .status-bar {
