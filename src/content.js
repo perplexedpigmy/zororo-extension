@@ -1571,7 +1571,8 @@ const PANEL_STATE_KEY = "zororoPanelState";
       if (incomplete) {
         const badge = document.createElement("span");
         badge.className = "season-missing";
-        badge.textContent = t("missing", { count: upcoming });
+        badge.textContent = "\u23F3" + upcoming;
+        badge.title = t("missing", { count: upcoming });
         label.appendChild(badge);
       }
       const div = document.createElement("div");

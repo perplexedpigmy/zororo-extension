@@ -52,6 +52,7 @@
 #ororo-dl-panel .season-name {
   min-width: clamp(72px, 28%, 120px);
   flex-shrink: 1;
+  white-space: nowrap;
 }
 
 #ororo-dl-panel .season-year {
@@ -63,6 +64,7 @@
   margin-left: 6px;
   font-weight: 600;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #ororo-dl-panel .season-group label:hover {
@@ -93,6 +95,7 @@
   margin-left: 6px;
   font-weight: 600;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #ororo-dl-panel .season-count {
