@@ -99,6 +99,8 @@
   font-size: 11px;
   color: #666;
   margin-left: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #ororo-dl-panel .actions {
