@@ -93,7 +93,23 @@
     <div class="checkbox-group">
       <label><input type="checkbox" id="closePanelOnClickOutside" checked /> Panel mouse control</label>
     </div>
-    <div class="hint">When enabled, clicking outside the panel minimizes it. Double-click outside to maximize. When disabled panel size is via panel only</div>
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <div style="flex:1;">
+        <label for="minimizeGesture">Minimize gesture</label>
+        <select id="minimizeGesture">
+          <option value="dblclick" selected>Double-click</option>
+          <option value="click">Single click</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <label for="maximizeGesture">Maximize gesture</label>
+        <select id="maximizeGesture">
+          <option value="dblclick" selected>Double-click</option>
+          <option value="click">Single click</option>
+        </select>
+      </div>
+    </div>
+    <div class="hint">Clicking or double-clicking outside the panel minimizes / maximizes it according to the gestures above. When disabled, panel size is controlled only via the panel itself.</div>
   </div>
 
   <button id="save">Save</button>

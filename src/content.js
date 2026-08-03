@@ -1081,7 +1081,11 @@ const PANEL_STATE_KEY = "zororoPanelState";
     const config = await getConfig();
     const lang = getLangPrefix();
 
-    const { closePanelOnClickOutside } = await chrome.storage.sync.get("closePanelOnClickOutside");
+    const { closePanelOnClickOutside, minimizeGesture, maximizeGesture } = await chrome.storage.sync.get({
+      closePanelOnClickOutside: true,
+      minimizeGesture: "dblclick",
+      maximizeGesture: "dblclick",
+    });
 
     const panel = document.createElement("div");
     panel.id = "ororo-dl-panel";
@@ -1193,21 +1197,25 @@ const PANEL_STATE_KEY = "zororoPanelState";
         return false;
       }
 
-      document.addEventListener("click", (e) => {
-        if (!panel || panel.classList.contains("collapsed")) return;
+      const handleOutside = (e, gesture) => {
+        if (!panel) return;
         if (isActionableInPanel(e.target, panel)) return;
         if (panel.contains(e.target)) return;
-        panel.classList.add("collapsed");
-        chrome.storage.local.set({ [PANEL_STATE_KEY]: "collapsed" });
-      }, true);
+        if (panel.classList.contains("collapsed")) {
+          if (maximizeGesture === gesture) {
+            panel.classList.remove("collapsed");
+            chrome.storage.local.set({ [PANEL_STATE_KEY]: "expanded" });
+          }
+        } else {
+          if (minimizeGesture === gesture) {
+            panel.classList.add("collapsed");
+            chrome.storage.local.set({ [PANEL_STATE_KEY]: "collapsed" });
+          }
+        }
+      };
 
-      document.addEventListener("dblclick", (e) => {
-        if (!panel || !panel.classList.contains("collapsed")) return;
-        if (isActionableInPanel(e.target, panel)) return;
-        if (panel.contains(e.target)) return;
-        panel.classList.remove("collapsed");
-        chrome.storage.local.set({ [PANEL_STATE_KEY]: "expanded" });
-      }, true);
+      document.addEventListener("click", (e) => handleOutside(e, "click"), true);
+      document.addEventListener("dblclick", (e) => handleOutside(e, "dblclick"), true);
     }
 
     if (isMovie) {

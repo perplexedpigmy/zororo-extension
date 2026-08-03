@@ -8,6 +8,8 @@ const DEFAULTS = {
   translateDescription: true,
   translateEpisodes: true,
   closePanelOnClickOutside: true,
+  minimizeGesture: "dblclick",
+  maximizeGesture: "dblclick",
 };
 
 async function load() {
@@ -27,6 +29,16 @@ async function load() {
   document.getElementById("translateDescription").checked = config.translateDescription;
   document.getElementById("translateEpisodes").checked = config.translateEpisodes;
   document.getElementById("closePanelOnClickOutside").checked = config.closePanelOnClickOutside;
+  document.getElementById("minimizeGesture").value = config.minimizeGesture;
+  document.getElementById("maximizeGesture").value = config.maximizeGesture;
+  updateGestureDisabled();
+  document.getElementById("closePanelOnClickOutside").onchange = updateGestureDisabled;
+}
+
+function updateGestureDisabled() {
+  const enabled = document.getElementById("closePanelOnClickOutside").checked;
+  document.getElementById("minimizeGesture").disabled = !enabled;
+  document.getElementById("maximizeGesture").disabled = !enabled;
 }
 
 function updateDefaultLangSelect(selected) {
@@ -59,8 +71,10 @@ async function save() {
   const translateDescription = document.getElementById("translateDescription").checked;
   const translateEpisodes = document.getElementById("translateEpisodes").checked;
   const closePanelOnClickOutside = document.getElementById("closePanelOnClickOutside").checked;
+  const minimizeGesture = document.getElementById("minimizeGesture").value;
+  const maximizeGesture = document.getElementById("maximizeGesture").value;
 
-  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang, translateComments, translateDescription, translateEpisodes, closePanelOnClickOutside });
+  await chrome.storage.sync.set({ rootDir, subtitleLangs, defaultSubLang, translateComments, translateDescription, translateEpisodes, closePanelOnClickOutside, minimizeGesture, maximizeGesture });
 
   const status = document.getElementById("status");
   status.textContent = "Saved.";

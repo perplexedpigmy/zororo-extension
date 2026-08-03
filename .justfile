@@ -5,7 +5,7 @@ build-firefox:
     mkdir -p dist
     cp -f manifest-firefox.json manifest.json
     sed -i "s/@VERSION@/`cat VERSION`/g" manifest.json
-    sed -i "s/@VERSION@/`cat VERSION`/g" README.md
+    sed -i -E "s/version-(@VERSION@|[0-9][0-9.]*)-blue/version-`cat VERSION`-blue/g" README.md
     rm -rf extension
     zip -r dist/zororo-firefox.zip src icons popup.html options.html manifest.json
     rm -f manifest.json
@@ -14,7 +14,7 @@ build-chrome:
     mkdir -p dist
     cp -f manifest-chrome.json manifest.json
     sed -i "s/@VERSION@/`cat VERSION`/g" manifest.json
-    sed -i "s/@VERSION@/`cat VERSION`/g" README.md
+    sed -i -E "s/version-(@VERSION@|[0-9][0-9.]*)-blue/version-`cat VERSION`-blue/g" README.md
     rm -rf extension
     zip -r dist/zororo-chrome.zip src icons popup.html options.html manifest.json
     rm -f manifest.json
